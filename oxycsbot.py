@@ -177,12 +177,21 @@ class OxyCSBot(ChatBot):
         'specific_faculty',
         'unknown_faculty',
         'unrecognized_faculty',
+        'unknown_loneliness',
+        'more_unknown',
+        'no_friends',
+        'tips',
+        'help',
+
     ]
 
     TAGS = {
         # intent
         'office hours': 'office-hours',
         'help': 'office-hours',
+
+        # loneliness sources
+        'no friends': 'no_friends',
 
         # professors
         'kathryn': 'kathryn',
@@ -210,6 +219,11 @@ class OxyCSBot(ChatBot):
         'jeff',
         'justin',
         'kathryn',
+    ]
+
+    # add more fixme
+    LONELINESS_SOURCES = [
+        'no_friends'
     ]
 
     def __init__(self):
@@ -261,16 +275,60 @@ class OxyCSBot(ChatBot):
 
     def respond_from_waiting(self, message, tags):
         self.professor = None
-        if 'office-hours' in tags:
-            for professor in self.PROFESSORS:
+        if 'office-hours' in tags: # change tags to be possible sources of loneliness fixme
+            for professor in self.PROFESSORS: # loneliness
                 if professor in tags:
                     self.professor = professor
-                    return self.go_to_state('specific_faculty')
-            return self.go_to_state('unknown_faculty')
+                    return self.go_to_state('specific_faculty') # loneliness
+            return self.go_to_state('unknown_loneliness')
         elif 'thanks' in tags:
             return self.finish('thanks')
         else:
             return self.finish('confused')
+
+    # "unknown_loneliness" state functions
+    def on_enter_unknown_loneliness(self):
+        return 'Why are you feeling lonely? ' \
+               'Is it because you feel like you don\'t have a deep connection with others,' \
+               'you don\'t know anyone on campus, ' \
+               'or is it something else?'
+
+    def respond_from_unknown_loneliness(self, message, tags):
+        for loneliness_source in self.LONELINESS_SOURCES:
+            if loneliness_source in tags:
+                return self.go_to_state(loneliness_source)
+        return self.go_to_state('more_unknown')
+
+    # "no friends" state functions
+    def on_enter_no_friends(self):
+        return 'I have no friends either :)' # fixme
+
+    def respond_from_no_friends(self, message, tags):
+        return self.finish('thanks')
+
+    # "more_unkown" state functions
+    def on_enter_more_unknown(self):
+        return 'Would you like some general tips on managing loneliness?' # fixme
+
+    def respond_from_more_unknown(self, message, tags):
+        if 'yes' in tags:
+            return self.go_to_state('tips')
+        else:
+            return self.go_to_state('help')
+
+    # "help" state functions
+    def on_enter_help(self):
+        return 'hi' # fixme
+
+    def respond_from_help(self, message, tags):
+        return self.finish('thanks')
+
+    # "tips" state functions
+    def on_enter_tips(self):
+        return 'Hi' # fixme
+
+    def respond_from_tips(self, message, tags):
+        return self.finish('thanks')
 
     # "specific_faculty" state functions
 
