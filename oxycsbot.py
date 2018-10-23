@@ -331,15 +331,15 @@ class OxyCSBot(ChatBot):
             return self.finish('confused')
 
     def on_enter_introduction(self):
-        print(self.GREETINGS[random.randint(0, len(self.GREETINGS) - 1)] )
-        return self.INTRODUCTIONS[random.randint(0, len(self.INTRODUCTIONS) - 1)]
+        time.sleep(0.5)
+        return self.INTRODUCTIONS[random.randint(0, len(self.INTRODUCTIONS) - 1)] + self.GREETINGS[random.randint(0, len(self.GREETINGS) - 1)]
 
     def respond_from_introduction(self, message, tags):
+        
         return self.go_to_state('greeting')
 
 
     def on_enter_greeting(self):
-        time.sleep(1)
         return self.GREETINGS[random.randint(0, len(self.GREETINGS) - 1)]
 
     def respond_from_greeting(self, message):
