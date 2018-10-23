@@ -179,6 +179,8 @@ class OxyCSBot(ChatBot):
         'specific_faculty',
         'unknown_faculty',
         'unrecognized_faculty',
+        'introduction',
+        'greeting',
         'unknown_loneliness',
         'more_unknown',
         'no_friends',
@@ -222,7 +224,7 @@ class OxyCSBot(ChatBot):
         # suggest
         'social': 'social',
         'soccer': 'sports',
-        'football': 'sports'
+        'football': 'sports',
 
         # other help needed
     }
@@ -242,12 +244,12 @@ class OxyCSBot(ChatBot):
 
     INTERESTS = [
         'social',
-        'sports'
+        'sports',
     ]
 
     INTEREST_ACTIVITIES = {
         'sports': ['intramural', 'team', 'club'], # intramural X, X team, X club
-        'singing': ['glee club', 'acapella', 'choir', 'chorus']
+        'singing': ['glee club', 'acapella', 'choir', 'chorus'],
     }
 
     INTRODUCTIONS = [
@@ -322,20 +324,26 @@ class OxyCSBot(ChatBot):
             return self.go_to_state('unknown_loneliness')
         elif 'greeting' in tags:
             self.greeting = True # might not need fixme
-            return self.INTRODUCTIONS[random.randint(0, len(self.INTRODUCTIONS) - 1)] + self.go_to_state('greeting')
+            return self.go_to_state('introduction')
         elif 'thanks' in tags:
             return self.finish('thanks')
         else:
             return self.finish('confused')
 
-    def on_enter_greeting(self, message, tags):
-        time.sleep(2)
-        return self.GREETINGS[random.randint(0, len(self.GREETINGS))]
+    def on_enter_introduction(self):
+        print(self.GREETINGS[random.randint(0, len(self.GREETINGS) - 1)] )
+        return self.INTRODUCTIONS[random.randint(0, len(self.INTRODUCTIONS) - 1)]
 
-    def respond_from_greeting(self, message, tags):
+    def respond_from_introduction(self, message, tags):
+        return self.go_to_state('greeting')
 
-        return self.go_to_state()
 
+    def on_enter_greeting(self):
+        time.sleep(1)
+        return self.GREETINGS[random.randint(0, len(self.GREETINGS) - 1)]
+
+    def respond_from_greeting(self, message):
+        return self.go_to_state('unknown_loneliness')
 
     # "unknown_loneliness" state functions
     def on_enter_unknown_loneliness(self):
