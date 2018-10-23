@@ -3,6 +3,8 @@
 
 import re
 from collections import Counter
+import random
+import time
 
 
 class ChatBot:
@@ -186,6 +188,9 @@ class OxyCSBot(ChatBot):
     ]
 
     TAGS = {
+        # greeting
+        'hello': 'greeting',
+
         # intent
         'office hours': 'office-hours',
         'help': 'office-hours',
@@ -211,6 +216,15 @@ class OxyCSBot(ChatBot):
         'yep': 'yes',
         'no': 'no',
         'nope': 'no',
+
+        # comfort
+
+        # suggest
+        'social': 'social',
+        'soccer': 'sports',
+        'football': 'sports'
+
+        # other help needed
     }
 
     PROFESSORS = [
@@ -226,6 +240,27 @@ class OxyCSBot(ChatBot):
         'no_friends'
     ]
 
+    INTERESTS = [
+        'social',
+        'sports'
+    ]
+
+    INTEREST_ACTIVITIES = {
+        'sports': ['intramural', 'team', 'club'], # intramural X, X team, X club
+        'singing': ['glee club', 'acapella', 'choir', 'chorus']
+    }
+
+    INTRODUCTIONS = [
+        # If you\'re feeling isolated at Oxy, I can help you with that.'
+        'Hello, I\'m Jane.\nI\'m an expert in helping students cope feelings of loneliness especially in their first year.',
+        'Hello, I\'m Jane.\n '
+
+    ]
+
+    GREETINGS = [
+        '\nWhat would you like to discuss regarding college isolation?'
+    ]
+
     def __init__(self):
         """Initialize the OxyCSBot.
 
@@ -234,6 +269,9 @@ class OxyCSBot(ChatBot):
         """
         super().__init__(default_state='waiting')
         self.professor = None
+        self.interests = None # array
+        self.greeting = False
+
 
     def get_office_hours(self, professor):
         """Find the office hours of a professor.
@@ -275,21 +313,34 @@ class OxyCSBot(ChatBot):
 
     def respond_from_waiting(self, message, tags):
         self.professor = None
+
         if 'office-hours' in tags: # change tags to be possible sources of loneliness fixme
             for professor in self.PROFESSORS: # loneliness
                 if professor in tags:
                     self.professor = professor
                     return self.go_to_state('specific_faculty') # loneliness
             return self.go_to_state('unknown_loneliness')
+        elif 'greeting' in tags:
+            self.greeting = True # might not need fixme
+            return self.INTRODUCTIONS[random.randint(0, len(self.INTRODUCTIONS) - 1)] + self.go_to_state('greeting')
         elif 'thanks' in tags:
             return self.finish('thanks')
         else:
             return self.finish('confused')
 
+    def on_enter_greeting(self, message, tags):
+        time.sleep(2)
+        return self.GREETINGS[random.randint(0, len(self.GREETINGS))]
+
+    def respond_from_greeting(self, message, tags):
+
+        return self.go_to_state()
+
+
     # "unknown_loneliness" state functions
     def on_enter_unknown_loneliness(self):
-        return 'Why are you feeling lonely? ' \
-               'Is it because you feel like you don\'t have a deep connection with others,' \
+        return 'What do you want to learn about finding your place at Oxy? ' \
+               'Is it because you feel like you don\'t have a deep connection with others, ' \
                'you don\'t know anyone on campus, ' \
                'or is it something else?'
 
@@ -375,7 +426,7 @@ class OxyCSBot(ChatBot):
     # "finish" functions
 
     def finish_confused(self):
-        return "Sorry, I'm just a simple bot that understands a few things. You can ask me about office hours though!"
+        return "Sorry, I'm just a simple Jane that understands a few things. I can help you if you're feeling a bit isolated though!"
 
     def finish_location(self):
         return f"{self.professor.capitalize()}'s office is in {self.get_office(self.professor)}"
