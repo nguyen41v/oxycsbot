@@ -245,6 +245,10 @@ class OxyCSBot(ChatBot):
     INTERESTS = [
         'social',
         'sports',
+        'music',
+        'arts',
+        'tech',
+        'other',
     ]
 
     INTEREST_ACTIVITIES = {
@@ -271,7 +275,7 @@ class OxyCSBot(ChatBot):
         """
         super().__init__(default_state='waiting')
         self.professor = None
-        self.interests = None # array
+        self.interests = []
         self.greeting = False
 
 
@@ -332,11 +336,51 @@ class OxyCSBot(ChatBot):
 
     def on_enter_introduction(self):
         time.sleep(0.5)
-        return self.INTRODUCTIONS[random.randint(0, len(self.INTRODUCTIONS) - 1)] + self.GREETINGS[random.randint(0, len(self.GREETINGS) - 1)]
+        return self.INTRODUCTIONS[random.randint(0, len(self.INTRODUCTIONS) - 1)] + '\n' + self.GREETINGS[random.randint(0, len(self.GREETINGS) - 1)]
 
     def respond_from_introduction(self, message, tags):
-        
-        return self.go_to_state('greeting')
+        for interest in self.INTERESTS:
+            if interest in tags:
+                self.interests.append(interest) # keeping track of interests
+        if len(self.interests) > 0:
+            return self.go_to_state(self.interests[random.randint(0, len(self.interests) - 1)]) # go to state with that interest
+        return self.go_to_state('other')
+
+    def on_enter_social(self):
+        pass
+
+    def respond_from_social(self, message, tags):
+        pass
+
+    def on_enter_sports(self):
+        pass
+
+    def respond_from_sports(self, message, tags):
+        pass
+
+    def on_enter_music(self):
+        pass
+
+    def respond_from_music(self, message, tags):
+        pass
+
+    def on_enter_arts(self):
+        pass
+
+    def respond_from_arts(self, message, tags):
+        pass
+
+    def on_enter_tech(self):
+        pass
+
+    def respond_from_tech(self, message, tags):
+        pass
+
+    def on_enter_other(self):
+        pass
+
+    def respond_from_other(self, message, tags):
+        pass
 
 
     def on_enter_greeting(self):
