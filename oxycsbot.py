@@ -233,6 +233,7 @@ class OxyCSBot(ChatBot):
         'social': 'social',
         'soccer': 'sports',
         'football': 'sports',
+        'sports': 'sports',
 
         # other help needed
         'die': 'failure',
@@ -291,6 +292,7 @@ class OxyCSBot(ChatBot):
         self.current = None
         self.social = 0
         self.greeting = False
+        self.sports = False
 
 
     def get_office_hours(self, professor):
@@ -362,6 +364,8 @@ class OxyCSBot(ChatBot):
                 self.interests.append(interest) # keeping track of interests
         if 'social' in self.interests:
             return self.go_to_state('social') # go to social
+        if 'soccer' in self.interests:
+            return self.go_to_state('sports')  # go to sports
         if len(self.interests) > 0:
             return self.go_to_state(self.interests[random.randint(0, len(self.interests) - 1)]) # go to state with that interest
         return self.go_to_state('other')
@@ -402,7 +406,20 @@ class OxyCSBot(ChatBot):
         return self.go_to_state('other')
 
     def on_enter_sports(self):
-        pass
+        if not self.sports:
+            self.sports = True
+            return 'That’s great! Sports are a great way to make new friends and be a part of Oxy. If you want, I can redirect you to Oxy Athletics.'
+            # else if bot has gone through here before and user has mentioned some interests
+        if len(self.interests) > 0:
+            possibilities = []
+            for interest in self.INTERESTS:
+                if interest not in self.interests:
+                    possibilities.append(interest)
+            self.current = possibilities[random.randint(0, len(possibilities) - 1)]
+            if self.current:
+                self.interests.remove(self.current)
+            return f'Are you interested in talking about {self.current}?'
+        return 'Is there anything in particular that you want to talk about?'
 
     def respond_from_sports(self, message, tags):
         pass
