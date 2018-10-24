@@ -335,6 +335,16 @@ class OxyCSBot(ChatBot):
         }
         return office[professor]
 
+    def route_interests(self, tags):
+        for interest in self.INTERESTS:
+            if (interest in tags) and (interest not in self.interests):
+                self.interests.append(interest) # keeping track of interests
+        if 'social' in self.interests:
+            return self.go_to_state('social') # go to social
+        if len(self.interests) > 0:
+            return self.go_to_state(self.interests[random.randint(0, len(self.interests) - 1)]) # go to state with that interest
+        return self.go_to_state('other')
+
     # "waiting" state functions
 
     def respond_from_waiting(self, message, tags):
@@ -405,15 +415,7 @@ class OxyCSBot(ChatBot):
             go = self.current
             self.current = None
             return self.go_to_state(go)
-        # same as introduction
-        for interest in self.INTERESTS:
-            if (interest in tags) and (interest not in self.interests):
-                self.interests.append(interest) # keeping track of interests
-        if 'social' in self.interests:
-            return self.go_to_state('social') # go to social
-        if len(self.interests) > 0:
-            return self.go_to_state(self.interests[random.randint(0, len(self.interests) - 1)]) # go to state with that interest
-        return self.go_to_state('other')
+        return self.route_interests(tags)
 
     def on_enter_sports(self):
         if not self.sports:
@@ -435,14 +437,17 @@ class OxyCSBot(ChatBot):
         pass
 
     def on_enter_music(self):
-
-        pass
-
-    def respond_from_music(self, message, tags):
         if not self.music:
             self.music = True
             return 'Perfect! Oxy has an amazing music culture. Want some recommendations on some ways you can get involved with music on campus?'
-        pass
+        return 'What else abour music do you enjoy?' #fixme
+
+    def respond_from_music(self, message, tags):
+        if 'yes' in tags and self.current:
+            go = self.current
+            self.current = None
+            return self.go_to_state(go)
+        return self.route_interests(tags)
 
     def on_enter_arts(self):
         pass
