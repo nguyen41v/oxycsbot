@@ -275,7 +275,7 @@ class OxyCSBot(ChatBot):
     ]
 
     GREETINGS = [
-        '\nWhat would you like to discuss regarding college isolation?'
+        'What would you like to discuss regarding college isolation?'
     ]
 
     def __init__(self):
@@ -432,9 +432,6 @@ class OxyCSBot(ChatBot):
         return 'Is there anything in particular that you want to talk about?'
 
     def respond_from_sports(self, message, tags):
-        if not self.music:
-            self.music = True
-            return 'Perfect! Oxy has an amazing music culture. Want some recommendations on some ways you can get involved with music on campus?'
         pass
 
     def on_enter_music(self):
@@ -442,6 +439,9 @@ class OxyCSBot(ChatBot):
         pass
 
     def respond_from_music(self, message, tags):
+        if not self.music:
+            self.music = True
+            return 'Perfect! Oxy has an amazing music culture. Want some recommendations on some ways you can get involved with music on campus?'
         pass
 
     def on_enter_arts(self):
