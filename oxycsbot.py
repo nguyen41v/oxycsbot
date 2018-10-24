@@ -181,6 +181,7 @@ class OxyCSBot(ChatBot):
         'unrecognized_faculty',
         'introduction',
         'greeting',
+        'social',
         'other',
         'sports',
         'music',
@@ -190,7 +191,8 @@ class OxyCSBot(ChatBot):
         'more_unknown',
         'no_friends',
         'tips',
-        'help',
+        'other_help',
+        'family',
 
     ]
 
@@ -225,6 +227,7 @@ class OxyCSBot(ChatBot):
         'nope': 'no',
 
         # comfort
+        'homesickness': 'family',
 
         # suggest
         'social': 'social',
@@ -232,6 +235,9 @@ class OxyCSBot(ChatBot):
         'football': 'sports',
 
         # other help needed
+        'die': 'failure',
+        'depression': 'failure',
+        'schizophrenia': 'failure',
     }
 
     PROFESSORS = [
@@ -253,7 +259,6 @@ class OxyCSBot(ChatBot):
         'music',
         'arts',
         'tech',
-        'other',
     ]
 
     INTEREST_ACTIVITIES = {
@@ -264,7 +269,7 @@ class OxyCSBot(ChatBot):
     INTRODUCTIONS = [
         # If you\'re feeling isolated at Oxy, I can help you with that.'
         'Hello, I\'m Jane.\nI\'m an expert in helping students cope feelings of loneliness especially in their first year.',
-        'Hello, I\'m Jane.\n '
+        'Hello, I\'m Jane.\n'
 
     ]
 
@@ -281,6 +286,10 @@ class OxyCSBot(ChatBot):
         super().__init__(default_state='waiting')
         self.professor = None
         self.interests = []
+        self.responses = []
+        self.mentioned = []
+        self.current = None
+        self.social = 0
         self.greeting = False
 
 
@@ -324,6 +333,10 @@ class OxyCSBot(ChatBot):
 
     def respond_from_waiting(self, message, tags):
         self.professor = None
+        self.interests = []
+        self.responses = []
+        self.mentioned = []
+        self.social = 0
 
         if 'office-hours' in tags: # change tags to be possible sources of loneliness fixme
             for professor in self.PROFESSORS: # loneliness
@@ -345,17 +358,48 @@ class OxyCSBot(ChatBot):
 
     def respond_from_introduction(self, message, tags):
         for interest in self.INTERESTS:
-            if interest in tags:
+            if (interest in tags) and (interest not in self.interests):
                 self.interests.append(interest) # keeping track of interests
+        if 'social' in self.interests:
+            return self.go_to_state('social') # go to social
         if len(self.interests) > 0:
             return self.go_to_state(self.interests[random.randint(0, len(self.interests) - 1)]) # go to state with that interest
         return self.go_to_state('other')
 
+
     def on_enter_social(self):
-        pass
+        # if it is the first time the bot has gone through this function
+        if not self.social:
+            self.social = True
+            return 'That is perfectly normal for your first year. The transition to Oxy can be difficult.' \
+                   '\nPerhaps if you tell me more about yourself, I can give you some specific pointers. ' \
+                   'What are your interests?'
+        # else if bot has gone through here before and user has mentioned some interests
+        if len(self.interests) > 0:
+            possibilities = []
+            for interest in self.INTERESTS:
+                if interest not in self.interests:
+                    possibilities.append(interest)
+            self.current = possibilities[random.randint(0, len(possibilities) - 1)]
+            self.interests.remove(self.current)
+            return f'Are you interested in talking about {self.current}?'
+        return 'Is there anything in particular that you want to talk about?'
+
 
     def respond_from_social(self, message, tags):
-        pass
+        if 'yes' in tags and self.current:
+            go = self.current
+            self.current = None
+            return self.go_to_state(go)
+        # same as introduction
+        for interest in self.INTERESTS:
+            if (interest in tags) and (interest not in self.interests):
+                self.interests.append(interest) # keeping track of interests
+        if 'social' in self.interests:
+            return self.go_to_state('social') # go to social
+        if len(self.interests) > 0:
+            return self.go_to_state(self.interests[random.randint(0, len(self.interests) - 1)]) # go to state with that interest
+        return self.go_to_state('other')
 
     def on_enter_sports(self):
         pass
@@ -387,12 +431,25 @@ class OxyCSBot(ChatBot):
     def respond_from_other(self, message, tags):
         pass
 
+    def on_enter_family(self):
+        pass
+
+    def respond_from_greeting(self, message):
+        pass
 
     def on_enter_greeting(self):
         return self.GREETINGS[random.randint(0, len(self.GREETINGS) - 1)]
 
     def respond_from_greeting(self, message):
         return self.go_to_state('unknown_loneliness')
+
+        # "help" state functions
+
+    def on_enter_other_help(self):
+        return 'hi'  # fixme
+
+    def respond_from_other_help(self, message, tags):
+        return self.finish('thanks')
 
     # "unknown_loneliness" state functions
     def on_enter_unknown_loneliness(self):
@@ -414,11 +471,11 @@ class OxyCSBot(ChatBot):
     def respond_from_no_friends(self, message, tags):
         return self.finish('thanks')
 
-    # "more_unkown" state functions
+    # "more_unkown" state functions fixme
     def on_enter_more_unknown(self):
         return 'Would you like some general tips on managing loneliness?' # fixme
 
-    def respond_from_more_unknown(self, message, tags):
+    def respond_from_more_unknown(self, message, tags): #fixme
         if 'yes' in tags:
             return self.go_to_state('tips')
         else:
