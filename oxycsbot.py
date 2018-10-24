@@ -343,6 +343,12 @@ class OxyCSBot(ChatBot):
         self.responses = []
         self.mentioned = []
         self.social = 0
+        self.greeting = False
+        self.sports = False
+        self.music = False
+        self.arts = False
+        self.tech = False
+        self.tips = 0
 
         if 'office-hours' in tags: # change tags to be possible sources of loneliness fixme
             for professor in self.PROFESSORS: # loneliness
@@ -412,7 +418,7 @@ class OxyCSBot(ChatBot):
     def on_enter_sports(self):
         if not self.sports:
             self.sports = True
-            return 'That’s great! Sports are a great way to make new friends and be a part of Oxy. If you want, I can redirect you to Oxy Athletics.'
+            return 'That\'s great! Sports are a great way to make new friends and be a part of Oxy. If you want, I can redirect you to Oxy Athletics.'
             # else if bot has gone through here before and user has mentioned some interests
         if len(self.interests) > 0:
             possibilities = []
@@ -426,9 +432,13 @@ class OxyCSBot(ChatBot):
         return 'Is there anything in particular that you want to talk about?'
 
     def respond_from_sports(self, message, tags):
+        if not self.music:
+            self.music = True
+            return 'Perfect! Oxy has an amazing music culture. Want some recommendations on some ways you can get involved with music on campus?'
         pass
 
     def on_enter_music(self):
+
         pass
 
     def respond_from_music(self, message, tags):
