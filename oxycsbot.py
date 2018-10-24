@@ -335,6 +335,7 @@ class OxyCSBot(ChatBot):
         }
         return office[professor]
 
+
     def route_interests(self, tags):
         for interest in self.INTERESTS:
             if (interest in tags) and (interest not in self.interests):
@@ -384,6 +385,7 @@ class OxyCSBot(ChatBot):
                 self.interests.append(interest) # keeping track of interests
         if 'social' in self.interests:
             return self.go_to_state('social') # go to social
+        #fixme; doing this so we can go to sports and not a random one for testing purposes
         if 'soccer' in self.interests:
             return self.go_to_state('sports')  # go to sports
         if len(self.interests) > 0:
@@ -400,15 +402,10 @@ class OxyCSBot(ChatBot):
                    'What are your interests?'
         # else if bot has gone through here before and user has mentioned some interests
         if len(self.interests) > 0:
-            possibilities = []
-            for interest in self.INTERESTS:
-                if interest not in self.interests:
-                    possibilities.append(interest)
-            self.current = possibilities[random.randint(0, len(possibilities) - 1)]
+            self.current = self.interests[random.randint(0, len(self.interests) - 1)]
             self.interests.remove(self.current)
             return f'Are you interested in talking about {self.current}?'
         return 'Is there anything in particular that you want to talk about?'
-
 
     def respond_from_social(self, message, tags):
         if 'yes' in tags and self.current:
@@ -450,28 +447,28 @@ class OxyCSBot(ChatBot):
         return self.route_interests(tags)
 
     def on_enter_arts(self):
-        pass
+        return 'arts'
 
     def respond_from_arts(self, message, tags):
-        pass
+        return self.finish('thanks')
 
     def on_enter_tech(self):
-        pass
+        return 'tech'
 
     def respond_from_tech(self, message, tags):
-        pass
+        return self.finish('thanks')
 
     def on_enter_other(self):
-        pass
+        return 'other'
 
     def respond_from_other(self, message, tags):
-        pass
+        return self.finish('thanks')
 
     def on_enter_family(self):
-        pass
+        return 'family'
 
     def respond_from_greeting(self, message):
-        pass
+        return self.finish('thanks')
 
     def on_enter_greeting(self):
         return self.GREETINGS[random.randint(0, len(self.GREETINGS) - 1)]
