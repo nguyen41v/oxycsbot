@@ -293,6 +293,10 @@ class OxyCSBot(ChatBot):
         self.social = 0
         self.greeting = False
         self.sports = False
+        self.music = False
+        self.arts = False
+        self.tech = False
+        self.tips = 0
 
 
     def get_office_hours(self, professor):
