@@ -353,7 +353,7 @@ class OxyCSBot(ChatBot):
         :return:
         """
         hours = {
-            'celia': 'Swan 216',
+            'orchestra': 'Swan 216',
             'hsing-hau': 'Swan 302',
             'jeff': 'Fowler 321',
             'justin': 'Swan B102',
