@@ -276,7 +276,7 @@ class OxyCSBot(ChatBot):
     ]
 
     GREETINGS = [
-        '\nWhat would you like to discuss regarding college isolation?'
+        'What would you like to discuss regarding college isolation?'
     ]
 
     def __init__(self):
@@ -294,6 +294,10 @@ class OxyCSBot(ChatBot):
         self.social = 0
         self.greeting = False
         self.sports = False
+        self.music = False
+        self.arts = False
+        self.tech = False
+        self.tips = 0
 
 
     def get_office_hours(self, professor):
@@ -332,6 +336,17 @@ class OxyCSBot(ChatBot):
         }
         return office[professor]
 
+
+    def route_interests(self, tags):
+        for interest in self.INTERESTS:
+            if (interest in tags) and (interest not in self.interests):
+                self.interests.append(interest) # keeping track of interests
+        if 'social' in self.interests:
+            return self.go_to_state('social') # go to social
+        if len(self.interests) > 0:
+            return self.go_to_state(self.interests[random.randint(0, len(self.interests) - 1)]) # go to state with that interest
+        return self.go_to_state('other')
+
     # "waiting" state functions
 
     def respond_from_waiting(self, message, tags):
@@ -340,6 +355,12 @@ class OxyCSBot(ChatBot):
         self.responses = []
         self.mentioned = []
         self.social = 0
+        self.greeting = False
+        self.sports = False
+        self.music = False
+        self.arts = False
+        self.tech = False
+        self.tips = 0
 
         if 'office-hours' in tags: # change tags to be possible sources of loneliness fixme
             for professor in self.PROFESSORS: # loneliness
@@ -365,6 +386,7 @@ class OxyCSBot(ChatBot):
                 self.interests.append(interest) # keeping track of interests
         if 'social' in self.interests:
             return self.go_to_state('social') # go to social
+        #fixme; doing this so we can go to sports and not a random one for testing purposes
         if 'soccer' in self.interests:
             return self.go_to_state('sports')  # go to sports
         if len(self.interests) > 0:
@@ -381,15 +403,10 @@ class OxyCSBot(ChatBot):
                    'What are your interests?'
         # else if bot has gone through here before and user has mentioned some interests
         if len(self.interests) > 0:
-            possibilities = []
-            for interest in self.INTERESTS:
-                if interest not in self.interests:
-                    possibilities.append(interest)
-            self.current = possibilities[random.randint(0, len(possibilities) - 1)]
+            self.current = self.interests[random.randint(0, len(self.interests) - 1)]
             self.interests.remove(self.current)
             return f'Are you interested in talking about {self.current}?'
         return 'Is there anything in particular that you want to talk about?'
-
 
     def respond_from_social(self, message, tags):
         if 'failure' in tags:
@@ -399,20 +416,12 @@ class OxyCSBot(ChatBot):
             go = self.current
             self.current = None
             return self.go_to_state(go)
-        # same as introduction
-        for interest in self.INTERESTS:
-            if (interest in tags) and (interest not in self.interests):
-                self.interests.append(interest) # keeping track of interests
-        if 'social' in self.interests:
-            return self.go_to_state('social') # go to social
-        if len(self.interests) > 0:
-            return self.go_to_state(self.interests[random.randint(0, len(self.interests) - 1)]) # go to state with that interest
-        return self.go_to_state('other')
+        return self.route_interests(tags)
 
     def on_enter_sports(self):
         if not self.sports:
             self.sports = True
-            return 'That’s great! Sports are a great way to make new friends and be a part of Oxy. If you want, I can redirect you to Oxy Athletics.'
+            return 'That\'s great! Sports are a great way to make new friends and be a part of Oxy. If you want, I can redirect you to Oxy Athletics.'
             # else if bot has gone through here before and user has mentioned some interests
         if len(self.interests) > 0:
             possibilities = []
@@ -455,34 +464,41 @@ class OxyCSBot(ChatBot):
 
 
     def on_enter_music(self):
-        pass
+        if not self.music:
+            self.music = True
+            return 'Perfect! Oxy has an amazing music culture. Want some recommendations on some ways you can get involved with music on campus?'
+        return 'What else abour music do you enjoy?' #fixme
 
     def respond_from_music(self, message, tags):
-        pass
+        if 'yes' in tags and self.current:
+            go = self.current
+            self.current = None
+            return self.go_to_state(go)
+        return self.route_interests(tags)
 
     def on_enter_arts(self):
-        pass
+        return 'arts'
 
     def respond_from_arts(self, message, tags):
-        pass
+        return self.finish('thanks')
 
     def on_enter_tech(self):
-        pass
+        return 'tech'
 
     def respond_from_tech(self, message, tags):
-        pass
+        return self.finish('thanks')
 
     def on_enter_other(self):
-        pass
+        return 'other'
 
     def respond_from_other(self, message, tags):
-        pass
+        return self.finish('thanks')
 
     def on_enter_family(self):
-        pass
+        return 'family'
 
     def respond_from_greeting(self, message):
-        pass
+        return self.finish('thanks')
 
     def on_enter_greeting(self):
         return self.GREETINGS[random.randint(0, len(self.GREETINGS) - 1)]
