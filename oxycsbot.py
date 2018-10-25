@@ -337,6 +337,17 @@ class OxyCSBot(ChatBot):
         return office[professor]
 
 
+    def go_to_help(self, tags):
+        if 'failure' in tags:
+            return go_to_state('other_help1')
+        
+
+
+
+
+
+
+
     def route_interests(self, tags):
         for interest in self.INTERESTS:
             if (interest in tags) and (interest not in self.interests):
