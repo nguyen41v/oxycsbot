@@ -195,6 +195,15 @@ class OxyCSBot(ChatBot):
         'family',
         'other_help2'
         'other_help3'
+        'good_transition',
+        'bad_transition',
+        'sciac',
+        'good_sciac',
+        'bad_sciac',
+        'yes_coach',
+        'no_coach',
+        'sciac_matchup',
+        'sciac_response',
     ]
 
     TAGS = {
@@ -226,6 +235,10 @@ class OxyCSBot(ChatBot):
         'yep': 'yes',
         'no': 'no',
         'nope': 'no',
+        'awful': 'no',
+        'good': 'yes',
+        'great': 'yes',
+        'bad': 'no',
 
         # comfort
         'homesickness': 'family',
@@ -269,25 +282,67 @@ class OxyCSBot(ChatBot):
         'singing': ['glee club', 'acapella', 'choir', 'chorus'],
     }
 
+    TEAM_SPORTS = {
+        'soccer',
+        'basketball',
+        'football',
+        'baseball',
 
+    }
+
+    INDIVIDUAL_SPORTS = [
+
+    ]
 
     RESPONSES = {
         'introductions' : [
         # If you\'re feeling isolated at Oxy, I can help you with that.'
-        'Hello, I\'m Santi.\nI\'m an expert in helping students cope feelings of loneliness especially in their first year.\n',
-        'Hello, I\'m Santi.\n'
-        ],
-        'arts': [
-
+        'Hello, I\'m Santi.\nI help college student athletes better transition to college sports at Oxy\n',
+        'Hello, I\'m Santi.\n',
         ],
         'greetings': [
-            'What would you like to discuss regarding college isolation?'
+            'How has your transition been?',
+            'How has your transition in sports been?',
+        ],
+        'good transition': [
+            ':grinning: Good to hear! How\'s your team doing in the SCIAC conference this year?',
+        ],
+        'bad transition': [
+            ':cry: I\'m sorry you feel that way. Have you told your coach?',
+        ],
+        'good sciac': [
+            'Do you think you all can keep the momentum?',
+            'Do you think y\'all can keep the momentum?',
+            'Do you think you all can keep up the momentum?',
+            'Do you think y\'all can keep up the momentum?',
+            'Do you think you all can keep the momentum going?',
+            'Do you think y\'all can keep the momentum going?',
+        ],
+        'bad sciac': [
+            'Have you voiced your concern'
+        ],
+        'yes coach': [
+            'That\'s what I\'d do too!',
+        ],
+        'no coach': [
+            'Okay, have you brought that up to your team?',
+            'Okay, have you brought that up to your teammates?',
+        ],
+        'sciac matchup': [
+            'Who\'s your next SCIAC matchup?'
+        ],
+        'sciac response': [
+            'That\'ll be a good one. Good luck and IO TRIUMPHE!'
         ]
     }
 
-    GREETINGS = [
-        'What would you like to discuss regarding college isolation?'
-    ]
+    COACHES = {
+        "Jack Stanebnfeldt": ["men's and women's water polo", "head coach", "(415) 328-0685", "stabenfeldt@oxy.edu"],
+        "Sean Grab": ["men's and women's water polo", "head assistant coach", "", ""],
+        "Nanea Fujiyama": ["men's and women's water polo", "centers coach", "", ""],
+        "Christian Fischer": ["men's and women's water polo", "goalie coach and recruiting coordinator", "", ""],
+        "Gilbert Millanes": ["men's and women's water polo", "volunteer assistant coach", "", ""],
+    }
 
     def __init__(self):
         """Initialize the OxyCSBot.
@@ -297,6 +352,7 @@ class OxyCSBot(ChatBot):
         """
         super().__init__(default_state='waiting')
         self.professor = None
+        # fixme get rid of extra variables and make/rename relevant ones
         self.interests = []
         self.responses = []
         self.mentioned = []
@@ -346,20 +402,6 @@ class OxyCSBot(ChatBot):
         }
         return office[professor]
 
-    def get_activity_hours(self, activity):
-        """
-
-        :param activity:
-        :return:
-        """
-        hours = {
-            'orchestra': 'Swan 216',
-            'hsing-hau': 'Swan 302',
-            'jeff': 'Fowler 321',
-            'justin': 'Swan B102',
-            'kathryn': 'Swan B101',
-        }
-        return hours[activity]
 
 
     def go_to_help(self, tags):
@@ -443,23 +485,54 @@ class OxyCSBot(ChatBot):
             return self.finish('confused')
 
     def on_enter_introduction(self):
-        time.sleep(0.5)
         return ':shocked_face_with_exploding_head:' + self.get_random_state_response('introductions') + self.get_random_state_response('greetings')
 
     def respond_from_introduction(self, message, tags):
-        for interest in self.INTERESTS:
-            if (interest in tags) and (interest not in self.interests):
-                self.interests.append(interest) # keeping track of interests
-        if 'social' in self.interests:
-            return self.go_to_state('social') # go to social
-        #fixme; doing this so we can go to sports and not a random one for testing purposes
-        if 'sports' in self.interests:
-            self.current = 'sports'
-            return self.go_to_state('sports')  # go to sports
-        if len(self.interests) > 0:
-            return self.go_to_state(self.interests[random.randint(0, len(self.interests) - 1)]) # go to state with that interest
-        return self.go_to_state('other')
+        if 'no' in tags:
+            return self.go_to_state('bad_transition')
+        else:
+            return self.go_to_state('sciac')
 
+
+# fixme, respond from functions are filled in with a filler
+    def on_enter_sciac(self):
+        return self.get_random_state_response('good transition')
+
+    def respond_from_sciac(self, message, tags):
+        if 'no' in tags:
+            return self.go_to_state('bad_transition')
+        else:
+            return self.finish('thanks')
+
+    def on_enter_bad_transition(self):
+        return self.get_random_state_response('bad transition')
+
+    def respond_from_bad_transition(self, message, tags):
+        if 'no' in tags:
+            return self.go_to_state('no_coach')
+        else:
+            return self.go_to_state('yes_coach')
+
+    def on_enter_yes_coach(self):
+        return self.get_random_state_response('yes coach')
+
+    def respond_from_yes_coach(self, message, tags):
+        return self.finish('thanks')
+
+    def on_enter_no_coach(self):
+        return self.get_random_state_response('no coach')
+
+    def respond_from_no_coach(self, message, tags):
+        return self.finish('thanks')
+
+    def on_enter_bad_sciac(self):
+        return self.get_random_state_response('bad sciac')
+
+    def respond_from_bad_sciac(self, message, tags):
+        if 'no' in tags:
+            return self.on_enter_bad_transition()
+        else:
+            pass
 
     def on_enter_social(self):
         # if it is the first time the bot has gone through this function
@@ -546,7 +619,7 @@ class OxyCSBot(ChatBot):
         return self.route_interest_answer(tags)
 
     def on_enter_greeting(self):
-        return self.GREETINGS[random.randint(0, len(self.GREETINGS) - 1)]
+        return self.get_random_state_response('greetings')
 
     def respond_from_greeting(self, message):
         return self.go_to_state('unknown_loneliness')
