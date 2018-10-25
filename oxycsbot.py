@@ -191,9 +191,10 @@ class OxyCSBot(ChatBot):
         'more_unknown',
         'no_friends',
         'tips',
-        'other_help',
+        'other_help1',
         'family',
-
+        'other_help2'
+        'other_help3'
     ]
 
     TAGS = {
@@ -450,7 +451,8 @@ class OxyCSBot(ChatBot):
         return 'Is there anything in particular that you want to talk about?'
 
     def respond_from_social(self, message, tags):
-        # add failure fixme
+        if 'failure' in tags:
+            return self.go_to_state('other help')
         return self.route_interest_answer(tags)
 
     def on_enter_sports(self):
@@ -470,7 +472,15 @@ class OxyCSBot(ChatBot):
         return 'Is there anything in particular that you want to talk about?'
 
     def respond_from_sports(self, message, tags):
-        pass
+        if 'no' in tags and self.current:
+            go = self.current
+            self.current = None
+            return self.go_to_state('sport2')
+        else:
+            go = self.current
+            self.current = None
+            return self.go_to_state(go)
+
 
     def on_enter_music(self):
         if not self.music:
@@ -611,6 +621,42 @@ class OxyCSBot(ChatBot):
                 return self.go_to_state('specific_faculty')
         return self.finish('fail')
 
+
+
+    def on_enter_other_help1(self):
+        return "I would recommend seeing an expert at Emmons. Is that something you might be interested in?",
+
+
+    def respond_from_other_help1(self, message, tags):
+
+        if 'no' in tags:
+            return self.go_to_state('other_help2')
+        else:
+            return self.go_to_state('finish_success')
+
+    def on_enter_other_help2(self):
+        return "Ok, no problem. My next suggestion would be a student support hotline, which could provide you with specific",
+
+    def respond_from_other_help2(self, message, tags):
+
+        if 'no' in tags:
+            return self.go_to_state('other_help2')
+        else:
+            print("Great!")
+            return self.go_to_state('finish_success')
+    def on_enter_other_help3(self):
+        return "Professional Help",
+
+
+    def respond_from_other_help3(self, message, tags):
+
+        if 'no' in tags:
+            return self.go_to_state('other_help2')
+        else:
+            return self.go_to_state('')
+
+
+
     # "finish" functions
 
     def finish_confused(self):
@@ -627,6 +673,7 @@ class OxyCSBot(ChatBot):
 
     def finish_thanks(self):
         return "You're welcome!"
+
 
 
 if __name__ == '__main__':
