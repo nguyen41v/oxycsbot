@@ -231,7 +231,7 @@ class OxyCSBot(ChatBot):
 
         # suggest
         'social': 'social',
-        'soccer': 'sports',
+        'soccer': ['sports', 'soccer'],
         'football': 'sports',
         'sports': 'sports',
 
@@ -267,12 +267,18 @@ class OxyCSBot(ChatBot):
         'singing': ['glee club', 'acapella', 'choir', 'chorus'],
     }
 
-    INTRODUCTIONS = [
-        # If you\'re feeling isolated at Oxy, I can help you with that.'
-        'Hello, I\'m Jane.\nI\'m an expert in helping students cope feelings of loneliness especially in their first year.',
-        'Hello, I\'m Jane.\n'
 
-    ]
+
+    RESPONSES = {
+        'introductions' : [
+        # If you\'re feeling isolated at Oxy, I can help you with that.'
+        'Hello, I\'m Santi.\nI\'m an expert in helping students cope feelings of loneliness especially in their first year.',
+        'Hello, I\'m Santi.\n'
+        ],
+        'arts': [
+
+        ]
+    }
 
     GREETINGS = [
         'What would you like to discuss regarding college isolation?'
@@ -346,6 +352,42 @@ class OxyCSBot(ChatBot):
             return self.go_to_state(self.interests[random.randint(0, len(self.interests) - 1)]) # go to state with that interest
         return self.go_to_state('other')
 
+
+    def route_interest_answer(self,tags):
+        """
+        Set the chatbot's state after getting a response from a yes/no question
+
+        Arguments:
+            state (str): The state to go to.
+
+        Returns:
+            state (function): The state to go to based off of the response
+        """
+        if 'no' in tags: # if they definitely don't want to talk about the current topic, go to a different interest
+            return self.route_interests(tags)
+        # else go back to the same state; might need to change this
+        go = self.current
+        self.current = None
+        return self.go_to_state(go)
+        # just in case we need this function later because of chatbot logic
+        # if 'yes' in tags and self.current:
+        #     go = self.current
+        #     self.current = None
+        #     return self.go_to_state(go)
+
+    def get_random_state_response(self, state):
+        """
+                Set the chatbot's state after getting a response from a yes/no question
+
+                Arguments:
+                    state (str): The state to go to.
+
+                Returns:
+                    state (function): The state to go to based off of the response
+        """
+        return self.RESPONSES[state][random.randint(0, len(self.RESPONSES[state]) - 1)]
+
+
     # "waiting" state functions
 
     def respond_from_waiting(self, message, tags):
@@ -408,11 +450,8 @@ class OxyCSBot(ChatBot):
         return 'Is there anything in particular that you want to talk about?'
 
     def respond_from_social(self, message, tags):
-        if 'yes' in tags and self.current:
-            go = self.current
-            self.current = None
-            return self.go_to_state(go)
-        return self.route_interests(tags)
+        # add failure fixme
+        return self.route_interest_answer(tags)
 
     def on_enter_sports(self):
         if not self.sports:
@@ -436,39 +475,41 @@ class OxyCSBot(ChatBot):
     def on_enter_music(self):
         if not self.music:
             self.music = True
-            return 'Perfect! Oxy has an amazing music culture. Want some recommendations on some ways you can get involved with music on campus?'
-        return 'What else abour music do you enjoy?' #fixme
+            return 'Perfect! Oxy has an amazing music culture. ' \
+                   'Want some recommendations on some ways you can get involved with music on campus?'
+        return 'What else about music do you enjoy?' #fixme
 
     def respond_from_music(self, message, tags):
-        if 'yes' in tags and self.current:
-            go = self.current
-            self.current = None
-            return self.go_to_state(go)
-        return self.route_interests(tags)
+        # add failure fixme
+        return self.route_interest_answer(tags)
 
     def on_enter_arts(self):
         return 'arts'
 
     def respond_from_arts(self, message, tags):
-        return self.finish('thanks')
+        # add failure fixme
+        return self.route_interest_answer(tags)
 
     def on_enter_tech(self):
         return 'tech'
 
     def respond_from_tech(self, message, tags):
-        return self.finish('thanks')
+        # add failure fixme
+        return self.route_interest_answer(tags)
 
     def on_enter_other(self):
         return 'other'
 
     def respond_from_other(self, message, tags):
-        return self.finish('thanks')
+        # add failure fixme
+        return self.route_interest_answer(tags)
 
     def on_enter_family(self):
         return 'family'
 
-    def respond_from_greeting(self, message):
-        return self.finish('thanks')
+    def respond_from_greeting(self, message, tags):
+        # add failure fixme
+        return self.route_interest_answer(tags)
 
     def on_enter_greeting(self):
         return self.GREETINGS[random.randint(0, len(self.GREETINGS) - 1)]
@@ -573,7 +614,7 @@ class OxyCSBot(ChatBot):
     # "finish" functions
 
     def finish_confused(self):
-        return "Sorry, I'm just a simple Jane that understands a few things. I can help you if you're feeling a bit isolated though!"
+        return "Sorry, I'm just a simple Santi that understands a few things. I can help you if you're feeling a bit isolated though!"
 
     def finish_location(self):
         return f"{self.professor.capitalize()}'s office is in {self.get_office(self.professor)}"
