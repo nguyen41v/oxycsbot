@@ -233,8 +233,9 @@ class OxyCSBot(ChatBot):
         # suggest
         'social': 'social',
         'soccer': ['sports', 'soccer'],
-        'football': 'sports',
+        'football': ['sports', 'football'],
         'sports': 'sports',
+        'baseball': ['sports', 'baseball'],
 
         # other help needed
         'die': 'failure',
@@ -345,16 +346,25 @@ class OxyCSBot(ChatBot):
         }
         return office[professor]
 
+    def get_activity_hours(self, activity):
+        """
+
+        :param activity:
+        :return:
+        """
+        hours = {
+            'celia': 'Swan 216',
+            'hsing-hau': 'Swan 302',
+            'jeff': 'Fowler 321',
+            'justin': 'Swan B102',
+            'kathryn': 'Swan B101',
+        }
+        return hours[activity]
+
 
     def go_to_help(self, tags):
         if 'failure' in tags:
             return self.go_to_state('other_help1')
-        
-
-
-
-
-
 
 
     def route_interests(self, tags):
@@ -489,13 +499,20 @@ class OxyCSBot(ChatBot):
     def on_enter_music(self):
         if not self.music:
             self.music = True
-            return 'Perfect! Oxy has an amazing music culture. ' \
-                   'Want some recommendations on some ways you can get involved with music on campus?'
+            return 'Hmm, would you potentially be interested in joining XXXXX?'
         return 'What else about music do you enjoy?' #fixme
 
     def respond_from_music(self, message, tags):
         # add failure fixme
         return self.route_interest_answer(tags)
+
+    def on_enter_music1(self):
+        return f"{self.XXXX} meets {self.get_activity_hours(XXXX)}.\nAre you able to attend their meetings?" #Orchestra meets time time
+                # inifixme
+    def respond_from_music1(self, message, tags):
+        return self.route_interest_answer(tags)
+
+
 
     def respond_from_specific_music(self, message, tags):
         pass
