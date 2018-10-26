@@ -287,11 +287,18 @@ class OxyCSBot(ChatBot):
         'basketball',
         'football',
         'baseball',
-
+        'lacrose',
+        'water polo',
+        'cross country',
+        'softball',
+        'volleyball',
     }
 
     INDIVIDUAL_SPORTS = [
-
+        'track and field',
+        'golf',
+        'swimming',
+        'tennis'
     ]
 
     RESPONSES = {
@@ -319,7 +326,7 @@ class OxyCSBot(ChatBot):
             'Do you think y\'all can keep the momentum going?',
         ],
         'bad sciac': [
-            'Have you voiced your concern'
+            'Have you voiced your concern',
         ],
         'yes coach': [
             'That\'s what I\'d do too!',
@@ -329,10 +336,23 @@ class OxyCSBot(ChatBot):
             'Okay, have you brought that up to your teammates?',
         ],
         'sciac matchup': [
-            'Who\'s your next SCIAC matchup?'
+            'Who\'s your next SCIAC matchup?',
         ],
         'sciac response': [
-            'That\'ll be a good one. Good luck and IO TRIUMPHE!'
+            'That\'ll be a good one. Good luck and IO TRIUMPHE!',
+        ],
+        'sport': [
+            'What sport do you play?', #fixme
+        ],
+        'team': [
+            'That\'s the best sport! How\'s your team chemistry?',
+        ],
+        'good team': [
+            'Tell me more!',
+        ],
+        'good team1': [
+            'That\'s perfect! Your team chemistry is extremely significant to your transition. '
+            'I would recommend to continue talking to your coach and hear your team\'s transition journey.'
         ]
     }
 
@@ -342,6 +362,7 @@ class OxyCSBot(ChatBot):
         "Nanea Fujiyama": ["men's and women's water polo", "centers coach", "", ""],
         "Christian Fischer": ["men's and women's water polo", "goalie coach and recruiting coordinator", "", ""],
         "Gilbert Millanes": ["men's and women's water polo", "volunteer assistant coach", "", ""],
+        "Heather Collins": ["women's volleyball", "head coach", "(323) 259-2702", "hcollins@oxy.edu"]
     }
 
     def __init__(self):
@@ -533,6 +554,43 @@ class OxyCSBot(ChatBot):
             return self.on_enter_bad_transition()
         else:
             pass
+
+    def on_enter_sport(self):
+        return 'some question about teams'
+
+    def respond_from_sport(self, message, tags):
+        for sport in self.INDIVIDUAL_SPORTS:
+            if sport in tags:
+                return self.go_to_state('individual_sport')
+        return self.go_to_state('team_sport')
+
+    def on_enter_team_sport(self):
+        return self.get_random_state_response('sport')
+
+    def respond_from_team_sport(self, message, tags):
+        if 'no' in tags:
+            return 'something'
+        return self.go_to_state('good_team')
+
+    def on_enter_good_team(self):
+        return self.get_random_state_response('good team')
+
+    def respond_from_good_team(self, message, tags):
+        return self.go_to_state('good_team1')
+
+    def on_enter_good_team1(self):
+        return self.get_random_state_response('good team1')
+
+    def respond_from_good_team1(self, message, tags):
+        return self.go_to_state('almost_end_rec_coach')
+
+    def on_enter_almost_end_rec_coach(self):
+        return self.get_random_state_response('almost end rec coach')
+
+    def respond_from_almost_end_rec_coach(self, message, tags):
+        if 'no' in tags:
+            return self.go_to_state('no_coach') #fixme think it's the wrong state
+        return self.finish('woo')
 
     def on_enter_social(self):
         # if it is the first time the bot has gone through this function
@@ -770,6 +828,9 @@ class OxyCSBot(ChatBot):
 
     def finish_thanks(self):
         return "You're welcome!"
+
+    def finish_woo(self):
+        return self.get_random_state_response('woo')
 
 
 
