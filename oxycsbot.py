@@ -560,7 +560,7 @@ class OxyCSBot(ChatBot):
     def on_enter_yes_team(self):
         return 'woo'
 
-    def respond_from_yes_team(self):
+    def respond_from_yes_team(self, message ,tag):
         return self.finish('woo')
 
 
