@@ -176,34 +176,24 @@ class OxyCSBot(ChatBot):
 
     STATES = [
         'waiting',
-        'specific_faculty',
-        'unknown_faculty',
-        'unrecognized_faculty',
         'introduction',
-        'greeting',
-        'social',
-        'other',
-        'sports',
-        'music',
-        'arts',
-        'tech',
-        'unknown_loneliness',
-        'more_unknown',
-        'no_friends',
-        'tips',
-        'other_help1',
-        'family',
-        'other_help2'
-        'other_help3'
-        'good_transition',
+        #'greeting',
+        #'good_transition',
         'bad_transition',
         'sciac',
-        'good_sciac',
+        #'good_sciac',
         'bad_sciac',
         'yes_coach',
         'no_coach',
-        'sciac_matchup',
-        'sciac_response',
+        #'sciac_matchup',
+        #'sciac_response',
+        'sport',
+        'team_sport',
+        'good_team',
+        'good_team1',
+        'almost_end_rec_coach',
+        'no_team',
+        'yes_team'
     ]
 
     TAGS = {
@@ -254,32 +244,6 @@ class OxyCSBot(ChatBot):
         'die': 'failure',
         'depression': 'failure',
         'schizophrenia': 'failure',
-    }
-
-    PROFESSORS = [
-        'celia',
-        'hsing-hau',
-        'jeff',
-        'justin',
-        'kathryn',
-    ]
-
-    # add more fixme
-    LONELINESS_SOURCES = [
-        'no_friends'
-    ]
-
-    INTERESTS = [
-        'social',
-        'sports',
-        'music',
-        'arts',
-        'tech',
-    ]
-
-    INTEREST_ACTIVITIES = {
-        'sports': ['intramural', 'team', 'club'], # intramural X, X team, X club
-        'singing': ['glee club', 'acapella', 'choir', 'chorus'],
     }
 
     TEAM_SPORTS = {
@@ -353,7 +317,21 @@ class OxyCSBot(ChatBot):
         'good team1': [
             'That\'s perfect! Your team chemistry is extremely significant to your transition. '
             'I would recommend to continue talking to your coach and hear your team\'s transition journey.'
-        ]
+        ],
+        'yes team': [
+            'What kind of captain do you have - junior or senior?'
+            'What kind of captain do you have on your team - junior or senior?'
+        ],
+        'no team': [
+            'I would recommend talking to your teammates. That might help with your transition. '
+                'Do you have any of your teammates\' contact information?',
+        ],
+        'captain': [
+            'no'
+        ],
+        'confused': [
+
+        ],
     }
 
     COACHES = {
@@ -374,17 +352,7 @@ class OxyCSBot(ChatBot):
         super().__init__(default_state='waiting')
         self.professor = None
         # fixme get rid of extra variables and make/rename relevant ones
-        self.interests = []
-        self.responses = []
-        self.mentioned = []
         self.current = None
-        self.social = 0
-        self.greeting = False
-        self.sports = False
-        self.music = False
-        self.arts = False
-        self.tech = False
-        self.tips = 0
 
 
     def get_office_hours(self, professor):
@@ -479,17 +447,6 @@ class OxyCSBot(ChatBot):
     # "waiting" state functions
 
     def respond_from_waiting(self, message, tags):
-        self.professor = None
-        self.interests = []
-        self.responses = []
-        self.mentioned = []
-        self.social = 0
-        self.greeting = False
-        self.sports = False
-        self.music = False
-        self.arts = False
-        self.tech = False
-        self.tips = 0
 
         if 'office-hours' in tags: # change tags to be possible sources of loneliness fixme
             for professor in self.PROFESSORS: # loneliness
@@ -523,7 +480,7 @@ class OxyCSBot(ChatBot):
         if 'no' in tags:
             return self.go_to_state('bad_transition')
         else:
-            return self.finish('thanks')
+            return self.go_to_state('sport')
 
     def on_enter_bad_transition(self):
         return self.get_random_state_response('bad transition')
@@ -582,233 +539,30 @@ class OxyCSBot(ChatBot):
         return self.get_random_state_response('good team1')
 
     def respond_from_good_team1(self, message, tags):
-        return self.go_to_state('almost_end_rec_coach')
-
-    def on_enter_almost_end_rec_coach(self):
-        return self.get_random_state_response('almost end rec coach')
-
-    def respond_from_almost_end_rec_coach(self, message, tags):
         if 'no' in tags:
             return self.go_to_state('no_coach') #fixme think it's the wrong state
         return self.finish('woo')
+    #
+    # def on_enter_almost_end_rec_coach(self):
+    #     return self.get_random_state_response('almost end rec coach')
+    #
+    # def respond_from_almost_end_rec_coach(self, message, tags):
+    #     if 'no' in tags:
+    #         return self.go_to_state('no_coach') #fixme think it's the wrong state
+    #     return self.finish('woo')
 
-    def on_enter_social(self):
-        # if it is the first time the bot has gone through this function
-        if not self.social:
-            self.social = True
-            return 'That is perfectly normal for your first year. The transition to Oxy can be difficult.' \
-                   '\nPerhaps if you tell me more about yourself, I can give you some specific pointers. ' \
-                   'What are your interests?'
-        # else if bot has gone through here before and user has mentioned some interests
-        if len(self.interests) > 0:
-            self.current = self.interests[random.randint(0, len(self.interests) - 1)]
-            self.interests.remove(self.current)
-            return f'Are you interested in talking about {self.current}?'
-        return 'Is there anything in particular that you want to talk about?'
+    def on_enter_no_team(self):
+        return self.get_random_state_response('no team')
 
-    def respond_from_social(self, message, tags):
-        if 'failure' in tags:
-            return self.go_to_state('other help')
-        return self.route_interest_answer(tags)
+    def respond_from_no_team(self, message, tags):
+        return self.finish('woo')
 
-    def on_enter_sports(self):
-        if not self.sports:
-            self.sports = True
-            return 'That\'s great! Sports are a great way to make new friends and be a part of Oxy. If you want, I can redirect you to Oxy Athletics.'
-            # else if bot has gone through here before and user has mentioned some interests
-        if len(self.interests) > 0:
-            self.current = self.interests[random.randint(0, len(self.interests) - 1)]
-            if self.current:
-                self.interests.remove(self.current)
-            return f'Are you interested in talking about {self.current}?'
-        return 'Is there anything in particular that you want to talk about?'
+    def on_enter_yes_team(self):
+        return 'woo'
 
-    def respond_from_sports(self, message, tags):
-        return self.route_interest_answer(tags)
+    def respond_from_yes_team(self):
+        return self.finish('woo')
 
-
-    def on_enter_music(self):
-        if not self.music:
-            self.music = True
-            return 'Hmm, would you potentially be interested in joining XXXXX?'
-        return 'What else about music do you enjoy?' #fixme
-
-    def respond_from_music(self, message, tags):
-        # add failure fixme
-        return self.route_interest_answer(tags)
-
-    def on_enter_music1(self):
-        return f"{self.XXXX} meets {self.get_activity_hours(XXXX)}.\nAre you able to attend their meetings?" #Orchestra meets time time
-                # inifixme
-    def respond_from_music1(self, message, tags):
-        return self.route_interest_answer(tags)
-
-
-
-    def respond_from_specific_music(self, message, tags):
-        pass
-
-    def on_enter_arts(self):
-        return 'arts'
-
-    def respond_from_arts(self, message, tags):
-        # add failure fixme
-        return self.route_interest_answer(tags)
-
-    def on_enter_tech(self):
-        return 'tech'
-
-    def respond_from_tech(self, message, tags):
-        # add failure fixme
-        return self.route_interest_answer(tags)
-
-    def on_enter_other(self):
-        return 'other'
-
-    def respond_from_other(self, message, tags):
-        # add failure fixme
-        return self.route_interest_answer(tags)
-
-    def on_enter_family(self):
-        return 'family'
-
-    def respond_from_greeting(self, message, tags):
-        # add failure fixme
-        return self.route_interest_answer(tags)
-
-    def on_enter_greeting(self):
-        return self.get_random_state_response('greetings')
-
-    def respond_from_greeting(self, message):
-        return self.go_to_state('unknown_loneliness')
-
-        # "help" state functions
-
-    def on_enter_other_help(self):
-        return 'hi'  # fixme
-
-    def respond_from_other_help(self, message, tags):
-        return self.finish('thanks')
-
-    # "unknown_loneliness" state functions
-    def on_enter_unknown_loneliness(self):
-        return 'What do you want to learn about finding your place at Oxy? ' \
-               'Is it because you feel like you don\'t have a deep connection with others, ' \
-               'you don\'t know anyone on campus, ' \
-               'or is it something else?'
-
-    def respond_from_unknown_loneliness(self, message, tags):
-        for loneliness_source in self.LONELINESS_SOURCES:
-            if loneliness_source in tags:
-                return self.go_to_state(loneliness_source)
-        return self.go_to_state('more_unknown')
-
-    # "no friends" state functions
-    def on_enter_no_friends(self):
-        return 'I have no friends either :)' # fixme
-
-    def respond_from_no_friends(self, message, tags):
-        return self.finish('thanks')
-
-    # "more_unkown" state functions fixme
-    def on_enter_more_unknown(self):
-        return 'Would you like some general tips on managing loneliness?' # fixme
-
-    def respond_from_more_unknown(self, message, tags): #fixme
-        if 'yes' in tags:
-            return self.go_to_state('tips')
-        else:
-            return self.go_to_state('help')
-
-    # "help" state functions
-    def on_enter_help(self):
-        return 'hi' # fixme
-
-    def respond_from_help(self, message, tags):
-        return self.finish('thanks')
-
-    # "tips" state functions
-    def on_enter_tips(self):
-        return 'Hi' # fixme
-
-    def respond_from_tips(self, message, tags):
-        return self.finish('thanks')
-
-    # "specific_faculty" state functions
-
-    def on_enter_specific_faculty(self):
-        response = '\n'.join([
-            f"{self.professor.capitalize()}'s office hours are {self.get_office_hours(self.professor)}",
-            'Do you know where their office is?',
-        ])
-        return response
-
-    def respond_from_specific_faculty(self, message, tags):
-        if 'yes' in tags:
-            return self.finish('success')
-        else:
-            return self.finish('location')
-
-    # "unknown_faculty" state functions
-
-    def on_enter_unknown_faculty(self):
-        return "Who's office hours are you looking for?"
-
-    def respond_from_unknown_faculty(self, message, tags):
-        for professor in self.PROFESSORS:
-            if professor in tags:
-                self.professor = professor
-                return self.go_to_state('specific_faculty')
-        return self.go_to_state('unrecognized_faculty')
-
-    # "unrecognized_faculty" state functions
-
-    def on_enter_unrecognized_faculty(self):
-        return ' '.join([
-            "I'm not sure I understand - are you looking for",
-            "Celia, Hsing-hau, Jeff, Justin, or Kathryn?",
-        ])
-
-    def respond_from_unrecognized_faculty(self, message, tags):
-        for professor in self.PROFESSORS:
-            if professor in tags:
-                self.professor = professor
-                return self.go_to_state('specific_faculty')
-        return self.finish('fail')
-
-
-
-    def on_enter_other_help1(self):
-        return "I would recommend seeing an expert at Emmons. Is that something you might be interested in?",
-
-
-    def respond_from_other_help1(self, message, tags):
-
-        if 'no' in tags:
-            return self.go_to_state('other_help2')
-        else:
-            return self.go_to_state('finish_success')
-
-    def on_enter_other_help2(self):
-        return "Ok, no problem. My next suggestion would be a student support hotline, which could provide you with specific",
-
-    def respond_from_other_help2(self, message, tags):
-
-        if 'no' in tags:
-            return self.go_to_state('other_help2')
-        else:
-            print("Great!")
-            return self.go_to_state('finish_success')
-    def on_enter_other_help3(self):
-        return "Professional Help",
-
-
-    def respond_from_other_help3(self, message, tags):
-
-        if 'no' in tags:
-            return self.go_to_state('other_help2')
-        else:
-            return self.go_to_state('')
 
 
 
