@@ -654,10 +654,10 @@ class OxyCSBot(ChatBot):
             return self.go_to_state('other_teammates')
 
     def on_enter_unrecognized_mentor(self):
-        pass
+        return 'woo' # fixme
 
     def respond_from_unrecognized_mentor(self, message, test):
-        pass
+        return self.finish('woo') # fixme
 
     def on_enter_ask_number(self):
         return self.get_random_state_response('ask_number')
@@ -676,7 +676,7 @@ class OxyCSBot(ChatBot):
         return self.get_random_state_response('other_teammates')
 
     def respond_from_other_teammates(self, message, tags):
-        pass
+        return self.finish('woo')  # fixme
 
     def on_enter_team_sport(self):
         return self.get_random_state_response('team_sport')
