@@ -3,6 +3,8 @@
 
 import re
 from collections import Counter
+import random
+import time
 
 
 class ChatBot:
@@ -174,34 +176,54 @@ class OxyCSBot(ChatBot):
 
     STATES = [
         'waiting',
-        'specific_faculty',
-        'unknown_faculty',
-        'unrecognized_faculty',
-        'unknown_loneliness',
-        'more_unknown',
-        'no_friends',
-        'tips',
-        'help',
-
+        'introduction',
+        #'greeting',
+        #'good_transition',
+        'bad_transition',
+        'sciac',
+        #'good_sciac',
+        'bad_sciac',
+        'yes_coach',
+        'no_coach',
+        #'sciac_matchup',
+        #'sciac_response',
+        'sport',
+        'team_sport',
+        'good_team',
+        'good_team1',
+        #'almost_end_rec_coach', # fixme?
+        'no_team',
+        'yes_team',
+        'captain',
+        'leave',
+        'individual_sport',
+        'connections',
+        'soccer',
+        'ms_mentor',
+        'ws_mentor',
+        'unrecognized_mentor',
+        'ask_number',
+        'give_number',
+        'other_teammates'
     ]
 
     TAGS = {
+        # greeting
+        'hello': 'greeting',
+        'hi' : 'greeting',
+        'howdy': 'greeting',
+        'wassup' : 'greeting',
+        'hey':'greeting',
+
+        
+
         # intent
         'office hours': 'office-hours',
-        'help': 'office-hours',
+        'help': 'help',
 
         # loneliness sources
         'no friends': 'no_friends',
 
-        # professors
-        'kathryn': 'kathryn',
-        'leonard': 'kathryn',
-        'justin': 'justin',
-        'li': 'justin',
-        'jeff': 'jeff',
-        'miller': 'jeff',
-        'celia': 'celia',
-        'hsing-hau': 'hsing-hau',
 
         # generic
         'thanks': 'thanks',
@@ -211,20 +233,209 @@ class OxyCSBot(ChatBot):
         'yep': 'yes',
         'no': 'no',
         'nope': 'no',
+        'awful': 'no',
+        'good': 'yes',
+        'great': 'yes',
+        'bad': 'no',
+        'difficult': 'no',
+        'hard': 'no',
+        'tough': 'no',
+        'wasn\'t' : 'no',
+        'isn\'t': 'no',
+        'wasnt': 'no',
+        'isnt': 'no',
+        'rude': 'no',
+        'unfriendly': 'yes',
+        'not nice': 'yes',
+        'bullying': 'yes',
+
+
+        # comfort
+        'homesickness': 'family',
+
+        # suggest
+        'social': 'social',
+        'soccer': ['sports', 'soccer'],
+        'football': ['sports', 'football'],
+        'sports': 'sports',
+        'baseball': ['sports', 'baseball'],
+
+        # other help needed
+        # other help needed
+        'die': 'failure',
+        'depression': 'failure',
+        'schizophrenia': 'failure',
     }
 
-    PROFESSORS = [
-        'celia',
-        'hsing-hau',
-        'jeff',
-        'justin',
-        'kathryn',
+    TEAM_SPORTS = {
+        'soccer',
+        'basketball',
+        'football',
+        'baseball',
+        'lacrose',
+        'water polo',
+        'cross country',
+        'softball',
+        'volleyball',
+    }
+
+
+    INDIVIDUAL_SPORTS = [
+        'track and field',
+        'golf',
+        'swimming',
+        'tennis'
     ]
 
-    # add more fixme
-    LONELINESS_SOURCES = [
-        'no_friends'
+    WOMENS_SOCCER = [
+        'sophia'
     ]
+
+    MENS_SOCCER = {
+        'david’'
+    }
+
+    SOCCER_MENTOR_NUMBERS = {
+        'devoney amberg': '(923) 477 - 6575',
+
+    }
+
+    RESPONSES = {
+        'introductions' : [
+        'Hello, I\'m Santi.\nI help college student athletes better transition to college sports at Oxy\n',
+        'Hello, I\'m Santi.\n',
+        ],
+        'greetings': [
+            'How has your transition been?',
+            'How has your transition in sports been?',
+        ],
+        'good_transition': [
+            ':grinning: Good to hear! How\'s your team doing in the SCIAC conference this year?',
+            'I’m glad to hear that you are having a good time! '
+                'The transition is not always easy, so it’s fantastic that you’re off to a strong start. '
+                'How’s the team doing?',
+        ],
+        'bad_transition': [
+            ':cry: I\'m sorry you feel that way. Have you told your coach?',
+        ],
+        'good_sciac': [
+            'Do you think you all can keep the momentum?',
+            'Do you think y\'all can keep the momentum?',
+            'Do you think you all can keep up the momentum?',
+            'Do you think y\'all can keep up the momentum?',
+            'Do you think you all can keep the momentum going?',
+            'Do you think y\'all can keep the momentum going?',
+        ],
+        'bad_sciac': [
+            'Have you voiced your concern',
+        ],
+        'yes_coach': [
+            'That\'s what I\'d do too!',
+        ],
+        'no_coach': [
+            'Okay, have you brought that up to your team?',
+            'Okay, have you brought that up to your teammates?',
+        ],
+        'sciac_matchup': [
+            'Who\'s your next SCIAC matchup?',
+        ],
+        'sciac_response': [
+            'That\'ll be a good one. Good luck and IO TRIUMPHE!',
+        ],
+        'sport': [
+            'What sport do you play?', #fixme
+        ],
+        'team_sport': [
+            'That\'s the best sport! How\'s your team chemistry?',
+        ],
+        'good_team': [
+            'Tell me more!',
+        ],
+        'good_team1': [
+            'That\'s perfect! Your team chemistry is extremely significant to your transition. '
+                'I would recommend to continue talking to your coach and hear your team\'s transition journey.'
+        ],
+        'yes_team': [
+            'Okay, that\'s good to know. What kind of captain do you have - junior or senior?',
+            'Okay, that\'s good to know. What kind of captain do you have on your team - junior or senior?',
+            #'What kind of captain do you have on your team - junior or senior?',
+            #'What kind of captain do you have - junior or senior?',
+        ],
+        'no_team': [
+            'I would recommend talking to your teammates. That might help with your transition. '
+                'Do you have any of your teammates\' contact information?',
+            'I would recommend talking to your teammates. That might help with your transition. '
+                'Students get homesick so getting close with your team or building a social group helps a ton. '
+                'If you don\'t agree, tell me a little more about what you\'ve thought about doing as a solution.',
+        ],
+        'captain': [
+            'That\'s important. A senior captain is always someone who should be approachable on your team. '
+                'Similarly, a junior captain should be approachable as well and may even have more insight into what you\'re dealing with since they\'re younger. '
+                'Either way, I would approach your captains.',
+        ],
+        'confused': [
+            'Sorry, I\'m just a simple Santi that understands a few things. I can help you in transitioning though!',
+        ],
+        'woo': [
+            'Feel free to reach out to me in the future.',
+            'Go tigers!',
+            'Glad I could be of help!',
+        ],
+        'leave': [
+            'Hmm . . . I recommend you wait a semester or year and see how things play out. '
+            '   If things get worse, maybe then consult with your family, friends, team, or perhaps Emmons.',
+            'Hmm . . . I recommend you wait a semester or year and see how things play out. '
+            '   If things get worse, maybe then consult with your family, friends, team, and perhaps Emmons.',
+            'Hmm . . . I recommend you wait a semester or year and see how things play out. '
+            '   If things get worse, then maybe consult with your family, friends, team, or perhaps Emmons.',
+            'Hmm . . . I recommend you wait a semester or year and see how things play out. '
+            '   If things get worse, then maybe consult with your family, friends, team, and perhaps Emmons.',
+            'Hmm . . . I recommend you wait a semester or year and see how things play out. '
+            '   If things get worse, then try consulting with your family, friends, team, and perhaps Emmons.',
+            'Hmm . . . I recommend you wait a semester or year and see how things play out. '
+            '   If things get worse, then try consulting with your family, friends, team, or perhaps Emmons.',
+        ],
+        'individual_sport': [
+            'That\'s a a great sport! '
+            '   Even thought it\'s an individual sport, I would recommend talking to some of the other athletes. '
+            '   How does that sound?',
+        ],
+        'connections': [
+            'Great, I think you should focus on making some connections. We\'ll see how this plays out.'
+        ],
+        'advice': [
+            'Hmm . . . my advice would be to wait for one semester and see how things play out.'
+        ],
+        'soccer': [
+            'Oh! Y\'all have a mentor program on your team. '
+                'It\'s very unique and it\'s on the men\'s and women\'s teams. '
+                'Who\'s your mentor?',
+            'Oh! You have a mentor program on your team. '
+                'It\'s very unique and it\'s on the men\'s and women\'s teams. '
+                'Who\'s your mentor?',
+        ],
+        'ms_mentor': [
+            ' is awesome. He was a first year at one point in time and I can bet you he had some of the same thoughts '
+                'and challenges as you. How do you feel about talking to him about your transition issues?',
+            ' is amazing. He was a first year at one point in time and I can bet you he had some of the same thoughts '
+                'and challenges as you. How do you feel about talking to him about your transition issues?',
+            ' is awesome. He was a first year at one point in time and I can bet you he had some of the same thoughts '
+                'and challenges as you. What do you think of talking to him about your transition issues?',
+        ],
+        'ws_mentor': [
+            ' is a great person to approach. She was a first-year at one point in time and I can bet you she had some '
+                'of the same thoughts and challenges. Text her!',
+        ]
+    }
+
+    COACHES = {
+        "Jack Stanebnfeldt": ["men's and women's water polo", "head coach", "(415) 328-0685", "stabenfeldt@oxy.edu"],
+        "Sean Grab": ["men's and women's water polo", "head assistant coach", "", ""],
+        "Nanea Fujiyama": ["men's and women's water polo", "centers coach", "", ""],
+        "Christian Fischer": ["men's and women's water polo", "goalie coach and recruiting coordinator", "", ""],
+        "Gilbert Millanes": ["men's and women's water polo", "volunteer assistant coach", "", ""],
+        "Heather Collins": ["women's volleyball", "head coach", "(323) 259-2702", "hcollins@oxy.edu"]
+    }
 
     def __init__(self):
         """Initialize the OxyCSBot.
@@ -233,7 +444,12 @@ class OxyCSBot(ChatBot):
         professor has been identified.
         """
         super().__init__(default_state='waiting')
-        self.professor = None
+
+        self.mentor = None
+        self.gmentor = None
+        # fixme get rid of extra variables and make/rename relevant ones
+        self.current = None
+
 
     def get_office_hours(self, professor):
         """Find the office hours of a professor.
@@ -271,111 +487,284 @@ class OxyCSBot(ChatBot):
         }
         return office[professor]
 
+
+
+    def go_to_help(self, tags):
+        if 'failure' in tags:
+            return self.go_to_state('other_help1')
+
+
+    def route_interests(self, tags):
+        for interest in self.INTERESTS:
+            if (interest in tags) and (interest not in self.interests):
+                self.interests.append(interest) # keeping track of interests
+        if 'social' in self.interests:
+            return self.go_to_state('social') # go to social
+        if len(self.interests) > 0:
+            return self.go_to_state(self.interests[random.randint(0, len(self.interests) - 1)]) # go to state with that interest
+        return self.go_to_state('other')
+
+
+    def route_interest_answer(self,tags):
+        """
+        Set the chatbot's state after getting a response from a yes/no question
+
+        Arguments:
+            state (str): The state to go to.
+
+        Returns:
+            state (function): The state to go to based off of the response
+        """
+        if 'no' in tags: # if they definitely don't want to talk about the current topic, go to a different interest
+            return self.route_interests(tags)
+        # else go back to the same state; might need to change this
+        go = self.current
+        self.current = None
+        return self.go_to_state(go)
+        # just in case we need this function later because of chatbot logic
+        # if 'yes' in tags and self.current:
+        #     go = self.current
+        #     self.current = None
+        #     return self.go_to_state(go)
+
+    def get_random_state_response(self, state):
+        """
+                Set the chatbot's state after getting a response from a yes/no question
+
+                Arguments:
+                    state (str): The state to go to.
+
+                Returns:
+                    state (function): The state to go to based off of the response
+        """
+        return self.RESPONSES[state][random.randint(0, len(self.RESPONSES[state]) - 1)]
+
+
     # "waiting" state functions
 
     def respond_from_waiting(self, message, tags):
-        self.professor = None
-        if 'office-hours' in tags: # change tags to be possible sources of loneliness fixme
-            for professor in self.PROFESSORS: # loneliness
-                if professor in tags:
-                    self.professor = professor
-                    return self.go_to_state('specific_faculty') # loneliness
-            return self.go_to_state('unknown_loneliness')
+        self.mentor = None
+        self.gmentor = None
+        # add additional if states to route user based off of what they said
+        # if 'teammates' in tags: go to team state
+        if 'greeting' in tags:
+            self.greeting = True # might not need fixme
+            return self.go_to_state('introduction')
         elif 'thanks' in tags:
             return self.finish('thanks')
         else:
             return self.finish('confused')
 
-    # "unknown_loneliness" state functions
-    def on_enter_unknown_loneliness(self):
-        return 'Why are you feeling lonely? ' \
-               'Is it because you feel like you don\'t have a deep connection with others,' \
-               'you don\'t know anyone on campus, ' \
-               'or is it something else?'
+    def on_enter_introduction(self):
+        return ':shocked_face_with_exploding_head:' + self.get_random_state_response('introductions') + self.get_random_state_response('greetings')
 
-    def respond_from_unknown_loneliness(self, message, tags):
-        for loneliness_source in self.LONELINESS_SOURCES:
-            if loneliness_source in tags:
-                return self.go_to_state(loneliness_source)
-        return self.go_to_state('more_unknown')
-
-    # "no friends" state functions
-    def on_enter_no_friends(self):
-        return 'I have no friends either :)' # fixme
-
-    def respond_from_no_friends(self, message, tags):
-        return self.finish('thanks')
-
-    # "more_unkown" state functions
-    def on_enter_more_unknown(self):
-        return 'Would you like some general tips on managing loneliness?' # fixme
-
-    def respond_from_more_unknown(self, message, tags):
-        if 'yes' in tags:
-            return self.go_to_state('tips')
+    def respond_from_introduction(self, message, tags):
+        if 'no' in tags:
+            return self.go_to_state('bad_transition')
         else:
-            return self.go_to_state('help')
+            return self.go_to_state('sciac')
 
-    # "help" state functions
-    def on_enter_help(self):
-        return 'hi' # fixme
+    def on_enter_sciac(self):
+        return self.get_random_state_response('good_transition')
 
-    def respond_from_help(self, message, tags):
-        return self.finish('thanks')
-
-    # "tips" state functions
-    def on_enter_tips(self):
-        return 'Hi' # fixme
-
-    def respond_from_tips(self, message, tags):
-        return self.finish('thanks')
-
-    # "specific_faculty" state functions
-
-    def on_enter_specific_faculty(self):
-        response = '\n'.join([
-            f"{self.professor.capitalize()}'s office hours are {self.get_office_hours(self.professor)}",
-            'Do you know where their office is?',
-        ])
-        return response
-
-    def respond_from_specific_faculty(self, message, tags):
-        if 'yes' in tags:
-            return self.finish('success')
+    def respond_from_sciac(self, message, tags):
+        if 'no' in tags:
+            return self.go_to_state('bad_transition')
         else:
-            return self.finish('location')
+            return self.go_to_state('sport')
 
-    # "unknown_faculty" state functions
+    def on_enter_bad_transition(self):
+        return self.get_random_state_response('bad_transition')
 
-    def on_enter_unknown_faculty(self):
-        return "Who's office hours are you looking for?"
+    def respond_from_bad_transition(self, message, tags):
+        if 'no' in tags:
+            return self.go_to_state('no_coach')
+        else:
+            return self.go_to_state('yes_coach')
 
-    def respond_from_unknown_faculty(self, message, tags):
-        for professor in self.PROFESSORS:
-            if professor in tags:
-                self.professor = professor
-                return self.go_to_state('specific_faculty')
-        return self.go_to_state('unrecognized_faculty')
+    def on_enter_yes_coach(self):
+        return self.get_random_state_response('yes_coach') + self.get_random_state_response('sport')
 
-    # "unrecognized_faculty" state functions
+    def respond_from_yes_coach(self, message, tags):
+        if 'soccer' in tags:
+            return self.go_to_state('soccer')
+        for sport in self.INDIVIDUAL_SPORTS:
+            if sport in tags:
+                return self.go_to_state('individual_sport')
+        return self.go_to_state('team_sport')
 
-    def on_enter_unrecognized_faculty(self):
-        return ' '.join([
-            "I'm not sure I understand - are you looking for",
-            "Celia, Hsing-hau, Jeff, Justin, or Kathryn?",
-        ])
+    def on_enter_no_coach(self):
+        return self.get_random_state_response('no_coach')
 
-    def respond_from_unrecognized_faculty(self, message, tags):
-        for professor in self.PROFESSORS:
-            if professor in tags:
-                self.professor = professor
-                return self.go_to_state('specific_faculty')
-        return self.finish('fail')
+    def respond_from_no_coach(self, message, tags):
+        return self.go_to_state('no_team')
+
+    def on_enter_bad_sciac(self):
+        return self.get_random_state_response('bad_sciac')
+
+    def respond_from_bad_sciac(self, message, tags):
+        if 'no' in tags:
+            return self.on_enter_bad_transition()
+        else:
+            return self.finish('woo') # fixme
+
+    def on_enter_sport(self):
+        return self.get_random_state_response('sport')
+
+    def respond_from_sport(self, message, tags):
+        if 'soccer' in tags:
+            return self.go_to_state('soccer')
+        for sport in self.INDIVIDUAL_SPORTS:
+            if sport in tags:
+                return self.go_to_state('individual_sport')
+        return self.go_to_state('team_sport')
+
+    def on_enter_soccer(self):
+        return self.get_random_state_response('soccer')
+
+    def respond_from_soccer(self, message, tags):
+        for mmentor in self.MENS_SOCCER:
+            if mmentor in tags:
+                self.mentor = mmentor
+                self.gmentor = 'm'
+                return self.go_to_state('ms_mentor')
+        for fmentor in self.WOMENS_SOCCER:
+            if fmentor in tags:
+                self.mentor = fmentor
+                self.gmentor = 'f'
+                return self.go_to_state('ws_mentor')
+        return self.go_to_state('unrecognized_mentor')
+
+    def on_enter_ms_mentor(self):
+        return self.mentor + self.get_random_state_response('ms_mentor')
+
+    def respond_from_ms_mentor(self, message, tags):
+        if 'yes' in tags:
+            return self.go_to_state('ask_number')
+        else:
+            return self.go_to_state('other_teammates')
+
+    def on_enter_ws_mentor(self):
+        return self.mentor + self.get_random_state_response('ws_mentor')
+
+    def respond_from_ws_mentor(self, message, tags):
+        if 'yes' in tags:
+            return self.go_to_state('ask_number')
+        else:
+            return self.go_to_state('other_teammates')
+
+    def on_enter_unrecognized_mentor(self):
+        return 'woo' # fixme
+
+    def respond_from_unrecognized_mentor(self, message, test):
+        return self.finish('woo') # fixme
+
+    def on_enter_ask_number(self):
+        return self.get_random_state_response('ask_number')
+
+    def respond_from_ask_number(self, message, tags):
+        if 'yes' in tags:
+            return self.go_to_state('give_number')
+
+    def on_enter_give_number(self):
+        return self.SOCCER_MENTOR_NUMBERS[self.mentor]
+
+    def respond_from_give_number(self, message, tags):
+        return self.go_to_state('woo')
+
+    def on_enter_other_teammates(self):
+        return self.get_random_state_response('other_teammates')
+
+    def respond_from_other_teammates(self, message, tags):
+        return self.finish('woo')  # fixme
+
+    def on_enter_team_sport(self):
+        return self.get_random_state_response('team_sport')
+
+    def respond_from_team_sport(self, message, tags):
+        if 'no' in tags:
+            return self.go_to_state('yes_team')
+        return self.go_to_state('good_team')
+
+    def on_enter_individual_sport(self):
+        return self.get_random_state_response('individual_sport')
+
+    def respond_from_individual_sport(self, message, tags):
+        if 'no' in tags:
+            return self.go_to_state('advice')
+        elif 'yes' in tags:
+            return self.go_to_state('connections')
+
+    def on_enter_connections(self):
+        return self.get_random_state_response('connections')
+
+    def respond_from_connections(self, message, tags):
+        return self.finish('woo')
+
+    def on_enter_advice(self):
+        return self.get_random_state_response('advice')
+
+    def respond_from_advice(self, message, tags):
+        if 'no' in tags:
+            return self.go_to_state('yes_team')
+        else:
+            return self.go_to_state('woo')
+
+    def on_enter_good_team(self):
+        return self.get_random_state_response('good_team')
+
+    def respond_from_good_team(self, message, tags):
+        return self.go_to_state('good_team1')
+
+    def on_enter_good_team1(self):
+        return self.get_random_state_response('good_team1')
+
+    def respond_from_good_team1(self, message, tags):
+        if 'no' in tags:
+            return self.go_to_state('yes_team') #fixme think it's the wrong state
+        return self.finish('woo')
+    #
+    # def on_enter_almost_end_rec_coach(self):
+    #     return self.get_random_state_response('almost end rec coach')
+    #
+    # def respond_from_almost_end_rec_coach(self, message, tags):
+    #     if 'no' in tags:
+    #         return self.go_to_state('no_coach') #fixme think it's the wrong state
+    #     return self.finish('woo')
+
+    def on_enter_no_team(self):
+        time.sleep(1)
+        return self.get_random_state_response('no_team')
+
+    def respond_from_no_team(self, message, tags):
+        if 'leave' in tags:
+            return self.go_to_state('leave')
+        return self.finish('woo')
+
+    def on_enter_yes_team(self):
+        return self.get_random_state_response('yes_team')
+
+    def respond_from_yes_team(self, message ,tag):
+        return self.go_to_state('captain')
+
+    def on_enter_captain(self):
+        time.sleep(0.5)
+        return self.get_random_state_response('captain')
+
+    def respond_from_captain(self, message, tags):
+        return self.finish('woo')
+
+
+    def on_enter_leave(self):
+        return self.go_to_state('leave')
+
+    def respond_from_leave(self, message, tags):
+        return self.finish('woo')
 
     # "finish" functions
 
     def finish_confused(self):
-        return "Sorry, I'm just a simple bot that understands a few things. You can ask me about office hours though!"
+        return self.get_random_state_response('confused')
 
     def finish_location(self):
         return f"{self.professor.capitalize()}'s office is in {self.get_office(self.professor)}"
@@ -388,6 +777,10 @@ class OxyCSBot(ChatBot):
 
     def finish_thanks(self):
         return "You're welcome!"
+
+    def finish_woo(self):
+        return self.get_random_state_response('woo')
+
 
 
 if __name__ == '__main__':
