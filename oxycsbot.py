@@ -197,8 +197,14 @@ class OxyCSBot(ChatBot):
         'captain',
         'leave',
         'individual_sport',
-        'connections'
-
+        'connections',
+        'soccer',
+        'ms_mentor',
+        'ws_mentor',
+        'unrecognized_mentor',
+        'ask_number',
+        'give_number',
+        'other_teammates'
     ]
 
     TAGS = {
@@ -244,7 +250,6 @@ class OxyCSBot(ChatBot):
         'bullying': 'yes',
 
 
-
         # comfort
         'homesickness': 'family',
 
@@ -274,6 +279,7 @@ class OxyCSBot(ChatBot):
         'volleyball',
     }
 
+
     INDIVIDUAL_SPORTS = [
         'track and field',
         'golf',
@@ -281,9 +287,21 @@ class OxyCSBot(ChatBot):
         'tennis'
     ]
 
+    WOMENS_SOCCER = [
+        'sophia'
+    ]
+
+    MENS_SOCCER = {
+        'david’'
+    }
+
+    SOCCER_MENTOR_NUMBERS = {
+        'devoney amberg': '(923) 477 - 6575',
+
+    }
+
     RESPONSES = {
         'introductions' : [
-        # If you\'re feeling isolated at Oxy, I can help you with that.'
         'Hello, I\'m Santi.\nI help college student athletes better transition to college sports at Oxy\n',
         'Hello, I\'m Santi.\n',
         ],
@@ -293,6 +311,9 @@ class OxyCSBot(ChatBot):
         ],
         'good_transition': [
             ':grinning: Good to hear! How\'s your team doing in the SCIAC conference this year?',
+            'I’m glad to hear that you are having a good time! '
+                'The transition is not always easy, so it’s fantastic that you’re off to a strong start. '
+                'How’s the team doing?',
         ],
         'bad_transition': [
             ':cry: I\'m sorry you feel that way. Have you told your coach?',
@@ -384,6 +405,26 @@ class OxyCSBot(ChatBot):
         ],
         'advice': [
             'Hmm . . . my advice would be to wait for one semester and see how things play out.'
+        ],
+        'soccer': [
+            'Oh! Y\'all have a mentor program on your team. '
+                'It\'s very unique and it\'s on the men\'s and women\'s teams. '
+                'Who\'s your mentor?',
+            'Oh! You have a mentor program on your team. '
+                'It\'s very unique and it\'s on the men\'s and women\'s teams. '
+                'Who\'s your mentor?',
+        ],
+        'ms_mentor': [
+            ' is awesome. He was a first year at one point in time and I can bet you he had some of the same thoughts '
+                'and challenges as you. How do you feel about talking to him about your transition issues?',
+            ' is amazing. He was a first year at one point in time and I can bet you he had some of the same thoughts '
+                'and challenges as you. How do you feel about talking to him about your transition issues?',
+            ' is awesome. He was a first year at one point in time and I can bet you he had some of the same thoughts '
+                'and challenges as you. What do you think of talking to him about your transition issues?',
+        ],
+        'ws_mentor': [
+            ' is a great person to approach. She was a first-year at one point in time and I can bet you she had some '
+                'of the same thoughts and challenges. Text her!',
         ]
     }
 
@@ -403,7 +444,9 @@ class OxyCSBot(ChatBot):
         professor has been identified.
         """
         super().__init__(default_state='waiting')
-        self.professor = None
+
+        self.mentor = None
+        self.gmentor = None
         # fixme get rid of extra variables and make/rename relevant ones
         self.current = None
 
@@ -500,6 +543,8 @@ class OxyCSBot(ChatBot):
     # "waiting" state functions
 
     def respond_from_waiting(self, message, tags):
+        self.mentor = None
+        self.gmentor = None
         # add additional if states to route user based off of what they said
         # if 'teammates' in tags: go to team state
         if 'greeting' in tags:
@@ -518,7 +563,6 @@ class OxyCSBot(ChatBot):
             return self.go_to_state('bad_transition')
         else:
             return self.go_to_state('sciac')
-
 
     def on_enter_sciac(self):
         return self.get_random_state_response('good_transition')
@@ -539,10 +583,15 @@ class OxyCSBot(ChatBot):
             return self.go_to_state('yes_coach')
 
     def on_enter_yes_coach(self):
-        return self.get_random_state_response('yes_coach')
+        return self.get_random_state_response('yes_coach') + self.get_random_state_response('sport')
 
     def respond_from_yes_coach(self, message, tags):
-        return self.finish('thanks')
+        if 'soccer' in tags:
+            return self.go_to_state('soccer')
+        for sport in self.INDIVIDUAL_SPORTS:
+            if sport in tags:
+                return self.go_to_state('individual_sport')
+        return self.go_to_state('team_sport')
 
     def on_enter_no_coach(self):
         return self.get_random_state_response('no_coach')
@@ -563,10 +612,71 @@ class OxyCSBot(ChatBot):
         return self.get_random_state_response('sport')
 
     def respond_from_sport(self, message, tags):
+        if 'soccer' in tags:
+            return self.go_to_state('soccer')
         for sport in self.INDIVIDUAL_SPORTS:
             if sport in tags:
                 return self.go_to_state('individual_sport')
         return self.go_to_state('team_sport')
+
+    def on_enter_soccer(self):
+        return self.get_random_state_response('soccer')
+
+    def respond_from_soccer(self, message, tags):
+        for mmentor in self.MENS_SOCCER:
+            if mmentor in tags:
+                self.mentor = mmentor
+                self.gmentor = 'm'
+                return self.go_to_state('ms_mentor')
+        for fmentor in self.WOMENS_SOCCER:
+            if fmentor in tags:
+                self.mentor = fmentor
+                self.gmentor = 'f'
+                return self.go_to_state('ws_mentor')
+        return self.go_to_state('unrecognized_mentor')
+
+    def on_enter_ms_mentor(self):
+        return self.mentor + self.get_random_state_response('ms_mentor')
+
+    def respond_from_ms_mentor(self, message, tags):
+        if 'yes' in tags:
+            return self.go_to_state('ask_number')
+        else:
+            return self.go_to_state('other_teammates')
+
+    def on_enter_ws_mentor(self):
+        return self.mentor + self.get_random_state_response('ws_mentor')
+
+    def respond_from_ws_mentor(self, message, tags):
+        if 'yes' in tags:
+            return self.go_to_state('ask_number')
+        else:
+            return self.go_to_state('other_teammates')
+
+    def on_enter_unrecognized_mentor(self):
+        pass
+
+    def respond_from_unrecognized_mentor(self, message, test):
+        pass
+
+    def on_enter_ask_number(self):
+        return self.get_random_state_response('ask_number')
+
+    def respond_from_ask_number(self, message, tags):
+        if 'yes' in tags:
+            return self.go_to_state('give_number')
+
+    def on_enter_give_number(self):
+        return self.SOCCER_MENTOR_NUMBERS[self.mentor]
+
+    def respond_from_give_number(self, message, tags):
+        return self.go_to_state('woo')
+
+    def on_enter_other_teammates(self):
+        return self.get_random_state_response('other_teammates')
+
+    def respond_from_other_teammates(self, message, tags):
+        pass
 
     def on_enter_team_sport(self):
         return self.get_random_state_response('team_sport')
