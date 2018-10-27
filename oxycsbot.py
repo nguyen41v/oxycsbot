@@ -191,7 +191,7 @@ class OxyCSBot(ChatBot):
         'team_sport',
         'good_team',
         'good_team1',
-        'almost_end_rec_coach',
+        #'almost_end_rec_coach', # fixme?
         'no_team',
         'yes_team',
         'captain',
