@@ -1081,6 +1081,7 @@ class OxyCSBot(ChatBot):
         return self.get_random_state_response('fail')
 
     def finish_woo(self):
+        self.start += 1
         return self.get_random_state_response('woo')
 
     def finish_coach(self):
