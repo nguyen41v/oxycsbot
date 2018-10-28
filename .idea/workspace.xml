@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="98e5dc1f-ca7d-4f75-a4d9-c97cc7e86aa2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/firstLonelyFlow.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Testing phase 01.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Testing phase 02.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Testing phase 03.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Testing phase 04.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/oxycsbot.py" beforeDir="false" afterPath="$PROJECT_DIR$/oxycsbot.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -43,19 +46,105 @@
         </counts>
       </usages-collector>
     </session>
+    <session id="-5792731">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.open.time.0" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="py" value="3748" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="Python" value="3748" />
+        </counts>
+      </usages-collector>
+    </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/oxycsbot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2875">
-              <caret line="564" column="44" selection-start-line="564" selection-start-column="44" selection-end-line="564" selection-end-column="44" />
+            <state relative-caret-position="180">
+              <caret line="924" column="24" selection-start-line="924" selection-start-column="17" selection-end-line="924" selection-end-column="24" />
+              <folding>
+                <element signature="e#8903#9138#0" />
+                <element signature="e#9169#9276#0" />
+                <element signature="e#10992#20995#0" />
+                <element signature="e#9540#9703#0" />
+                <element signature="e#9730#9853#0" />
+                <element signature="e#9886#10228#0" />
+                <element signature="e#10621#11125#0" />
+                <element signature="e#10384#10792#0" />
+                <element signature="e#10909#10969#0" />
+                <element signature="e#10995#11143#0" />
+                <element signature="e#11174#11240#0" />
+                <element signature="e#11272#11357#0" />
+                <element signature="e#11380#11445#0" />
+                <element signature="e#11473#11559#0" />
+                <element signature="e#11586#11634#0" />
+                <element signature="e#11680#11880#0" />
+                <element signature="e#11920#12307#0" />
+                <element signature="e#12332#12868#0" />
+                <element signature="e#12893#13257#0" />
+                <element signature="e#13421#13573#0" />
+                <element signature="e#13596#14888#0" />
+                <element signature="e#14922#15143#0" />
+                <element signature="e#15172#15296#0" />
+                <element signature="e#15320#15436#0" />
+                <element signature="e#15460#15860#0" />
+                <element signature="e#17391#18031#0" />
+                <marker date="1540712431341" expanded="true" signature="27323:27329" ph="..." />
+                <marker date="1540712431341" expanded="true" signature="28005:28090" ph="..." />
+                <marker date="1540712431341" expanded="true" signature="29701:29933" ph="..." />
+                <marker date="1540712431341" expanded="true" signature="30680:30736" ph="..." />
+                <marker date="1540712431341" expanded="true" signature="31012:31019" ph="..." />
+                <marker date="1540712431341" expanded="true" signature="31639:31951" ph="..." />
+                <marker date="1540712431341" expanded="true" signature="35243:35446" ph="..." />
+                <marker date="1540712431341" expanded="true" signature="36785:37109" ph="..." />
+                <marker date="1540712431341" expanded="true" signature="39344:39456" ph="..." />
+                <marker date="1540712431341" expanded="true" signature="40269:40275" ph="..." />
+                <marker date="1540712431341" expanded="true" signature="40538:40598" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>good_tr</find>
+      <find>sciac_mat</find>
+      <find>medium_ra</find>
+      <find>bad_tr</find>
+      <find>sciac</find>
+      <find>bad_scia</find>
+      <find>bully</find>
+      <find>sad_l</find>
+      <find>bad_tran</find>
+      <find>medium</find>
+      <find>medium_rare</find>
+      <find>unrec</find>
+      <find>gment</find>
+      <find>team_sport</find>
+      <find>leave</find>
+      <find>help</find>
+      <find>other_tea</find>
+      <find>ms_men</find>
+      <find>confused</find>
+      <find>talk_to</find>
+      <find>other_teamm</find>
+      <find>woo</find>
+      <find>self.finish('w</find>
+      <find>mentor</find>
+      <find>ask_num</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -67,17 +156,16 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="110" />
-    <option name="width" value="1440" />
-    <option name="height" value="807" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="470" />
+    <option name="width" value="2796" />
+    <option name="height" value="1952" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -89,6 +177,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -149,15 +238,15 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="807" extended-state="6" />
+    <frame x="235" y="0" width="1398" height="976" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.03505007" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.07703927" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.07412587" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.26950353" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -179,8 +268,47 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/oxycsbot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2875">
-          <caret line="564" column="44" selection-start-line="564" selection-start-column="44" selection-end-line="564" selection-end-column="44" />
+        <state relative-caret-position="180">
+          <caret line="924" column="24" selection-start-line="924" selection-start-column="17" selection-end-line="924" selection-end-column="24" />
+          <folding>
+            <element signature="e#8903#9138#0" />
+            <element signature="e#9169#9276#0" />
+            <element signature="e#10992#20995#0" />
+            <element signature="e#9540#9703#0" />
+            <element signature="e#9730#9853#0" />
+            <element signature="e#9886#10228#0" />
+            <element signature="e#10621#11125#0" />
+            <element signature="e#10384#10792#0" />
+            <element signature="e#10909#10969#0" />
+            <element signature="e#10995#11143#0" />
+            <element signature="e#11174#11240#0" />
+            <element signature="e#11272#11357#0" />
+            <element signature="e#11380#11445#0" />
+            <element signature="e#11473#11559#0" />
+            <element signature="e#11586#11634#0" />
+            <element signature="e#11680#11880#0" />
+            <element signature="e#11920#12307#0" />
+            <element signature="e#12332#12868#0" />
+            <element signature="e#12893#13257#0" />
+            <element signature="e#13421#13573#0" />
+            <element signature="e#13596#14888#0" />
+            <element signature="e#14922#15143#0" />
+            <element signature="e#15172#15296#0" />
+            <element signature="e#15320#15436#0" />
+            <element signature="e#15460#15860#0" />
+            <element signature="e#17391#18031#0" />
+            <marker date="1540712431341" expanded="true" signature="27323:27329" ph="..." />
+            <marker date="1540712431341" expanded="true" signature="28005:28090" ph="..." />
+            <marker date="1540712431341" expanded="true" signature="29701:29933" ph="..." />
+            <marker date="1540712431341" expanded="true" signature="30680:30736" ph="..." />
+            <marker date="1540712431341" expanded="true" signature="31012:31019" ph="..." />
+            <marker date="1540712431341" expanded="true" signature="31639:31951" ph="..." />
+            <marker date="1540712431341" expanded="true" signature="35243:35446" ph="..." />
+            <marker date="1540712431341" expanded="true" signature="36785:37109" ph="..." />
+            <marker date="1540712431341" expanded="true" signature="39344:39456" ph="..." />
+            <marker date="1540712431341" expanded="true" signature="40269:40275" ph="..." />
+            <marker date="1540712431341" expanded="true" signature="40538:40598" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
