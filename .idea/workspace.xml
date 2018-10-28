@@ -19,10 +19,10 @@
     <session id="796493037">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
-          <entry key="project.open.time.0" value="1" />
-          <entry key="project.open.time.3" value="1" />
-          <entry key="project.opened" value="2" />
+          <entry key="project.closed" value="3" />
+          <entry key="project.open.time.0" value="2" />
+          <entry key="project.open.time.3" value="2" />
+          <entry key="project.opened" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -110,6 +110,7 @@
                 <marker date="1540712431341" expanded="true" signature="39344:39456" ph="..." />
                 <marker date="1540712431341" expanded="true" signature="40269:40275" ph="..." />
                 <marker date="1540712431341" expanded="true" signature="40538:40598" ph="..." />
+>>>>>>> aaede0fa644bd49b1762d5aa74097d991f60edf2
               </folding>
             </state>
           </provider>
@@ -182,7 +183,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="settings.github" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -254,7 +255,7 @@
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32890856" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.32890856" />
-      <window_info anchor="bottom" id="Python Console" order="10" weight="0.3118881" />
+      <window_info anchor="bottom" id="Python Console" order="10" weight="0.3104895" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -314,3 +315,4 @@
     </entry>
   </component>
 </project>
+>>>>>>> 9547a8abf1ca4c78cda7301b1abd2999203ec53e

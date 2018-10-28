@@ -220,7 +220,7 @@ class OxyCSBot(ChatBot):
         'wassup' : 'greeting',
         'hey':'greeting',
 
-        
+
 
         # intent
         'help': 'help',
@@ -564,16 +564,16 @@ class OxyCSBot(ChatBot):
                 # 'What kind of captain do you have - junior or senior?',
             ],
             'no_team': [
-                'I would recommend talking to your teammates. That might help with your transition. '
+                'I would recommend talking to your teammates. That might help with your transition.'
                 'Do you have any of your teammates\' contact information?',
-                'I would recommend talking to your teammates. That might help with your transition. '
-                'Students get homesick so getting close with your team or building a social group helps a ton. '
+                'I would recommend talking to your teammates. That might help with your transition.',
+                'Students get homesick so getting close with your team or building a social group helps a ton.',
                 'If you don\'t agree, tell me a little more about what you\'ve thought about doing as a solution.',
             ],
             'captain': [
                 'That\'s important. A senior captain is always someone who should be approachable on your team. '
-                'Similarly, a junior captain should be approachable as well and may even have more insight into what you\'re dealing with since they\'re younger. '
-                'Either way, I would approach your captains.',
+                    'Similarly, a junior captain should be approachable as well and may even have more insight into what you\'re dealing with since they\'re younger. '
+                    'Either way, I would approach your captains.',
             ],
             'confused': [
                 'Sorry, I\'m only understands a few things. I can help you in transitioning though!',
