@@ -238,6 +238,10 @@ class OxyCSBot(ChatBot):
         'teamates': 'team',
         'coach': 'coach',
         'yes': 'yes',
+        'ye': 'yes',
+        'yea': 'yes',
+        'yeah': 'yes',
+        'ya': 'yes',
         'yep': 'yes',
         'no': 'no',
         'nope': 'no',
@@ -259,6 +263,7 @@ class OxyCSBot(ChatBot):
         'what else': 'question',
         'anything else': 'question',
         'uh': 'what_the',
+        'oh': 'what_the',
         'hm': 'what_the',
         'um': 'what_the',
         'eh': 'what_the',
@@ -568,7 +573,7 @@ class OxyCSBot(ChatBot):
                 'Do you have any of your teammates\' contact information?',
                 'I would recommend talking to your teammates. That might help with your transition.',
                 'Students get homesick so getting close with your team or building a social group helps a ton.',
-                'If you don\'t agree, tell me a little more about what you\'ve thought about doing as a solution.',
+                # 'If you don\'t agree, tell me a little more about what you\'ve thought about doing as a solution.',
             ],
             'captain': [
                 'That\'s important. A senior captain is always someone who should be approachable on your team. '
