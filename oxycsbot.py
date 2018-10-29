@@ -782,8 +782,7 @@ class OxyCSBot(ChatBot):
             return self.go_to_state('amber')
         if 'no' in tags:
             return self.go_to_state('bad_transition')
-        else:
-            return self.go_to_state('sport')
+        return self.go_to_state('sport')
 
     def on_enter_sciac(self):
         return self.get_random_state_response('good_transition')
@@ -793,8 +792,7 @@ class OxyCSBot(ChatBot):
             return self.go_to_state('amber')
         if 'no' in tags:
             return self.go_to_state('bad_transition')
-        else:
-            return self.go_to_state('sport')
+        return self.go_to_state('sport')
 
     def on_enter_sciac_matchup(self):
         return self.get_random_state_response('sciac_matchup')
@@ -825,8 +823,7 @@ class OxyCSBot(ChatBot):
             return self.go_to_state('yes_coach')
         if 'what_the' in tags:
             return self.what_the('bad_transition', 'yes_coach', 'no_coach')
-        else:
-            return self.go_to_state('yes_coach')
+        return self.go_to_state('yes_coach')
 
     def on_enter_confused(self):
         return self.get_random_state_response('confused')
@@ -890,8 +887,7 @@ class OxyCSBot(ChatBot):
     def respond_from_ms_mentor(self, message, tags):
         if 'yes' in tags:
             return self.go_to_state('ask_number')
-        else:
-            return self.go_to_state('other_teammates')
+        return self.go_to_state('other_teammates')
 
     def on_enter_ws_mentor(self):
         return self.mentor + self.get_random_state_response('ws_mentor')
@@ -899,8 +895,7 @@ class OxyCSBot(ChatBot):
     def respond_from_ws_mentor(self, message, tags):
         if 'yes' in tags:
             return self.go_to_state('ask_number')
-        else:
-            return self.go_to_state('other_teammates')
+        return self.go_to_state('other_teammates')
 
     def on_enter_unrecognized_mentor(self):
         self.umentor += 1
