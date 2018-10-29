@@ -288,6 +288,7 @@ class OxyCSBot(ChatBot):
         'not great': 'no',
         'not good': 'no',
         'not well': 'no',
+        'not yet': 'no',
         'not that great': 'no',
         'transferring': ['leave', 'no'],
         'transfer': ['leave', 'no'],
@@ -519,7 +520,7 @@ class OxyCSBot(ChatBot):
 
         self.RESPONSES = {
             'introductions': [
-                'Hello, I\'m Santi.\nI help college student athletes better transition to college sports at Oxy\n',
+                'Hello, I\'m Santi.\nI help college student athletes better transition to college sports at Oxy.\n',
             ],
             'greetings': [
                 'How has your transition been?',
@@ -583,7 +584,7 @@ class OxyCSBot(ChatBot):
             ],
             'no_team': [
                 'I would recommend talking to your teammates. That might help with your transition.'
-                'Do you have any of your teammates\' contact information?',
+                ' Do you have any of your teammates\' contact information?',
                 'I would recommend talking to your teammates. That might help with your transition.',
                 'Students get homesick so getting close with your team or building a social group helps a ton.',
                 # 'If you don\'t agree, tell me a little more about what you\'ve thought about doing as a solution.',
