@@ -807,7 +807,9 @@ class OxyCSBot(ChatBot):
         return self.get_random_state_response('sciac_response')
 
     def respond_from_sciac_response(self, message, tags):
-        return self.go_to_state('sciac_response')
+        if 'thanks' in tags:
+            return self.finish('woo')
+        return self.finish('ask_user')
 
     def on_enter_amber(self):
         return self.get_random_state_response('amber') + ' ' + self.get_random_state_response('sciac_matchup')
