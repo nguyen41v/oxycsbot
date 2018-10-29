@@ -294,6 +294,8 @@ class OxyCSBot(ChatBot):
         'isn\'t': 'no',
         'doesn\'t: no'
         'don\'t': 'no',
+        'havent': 'no',
+        'haven\'t': 'no',
         'dont': 'no',
         'wasnt': 'no',
         'isnt': 'no',
