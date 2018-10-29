@@ -286,6 +286,7 @@ class OxyCSBot(ChatBot):
         'not that well': 'no',
         'not that good': 'no',
         'not great': 'no',
+        'worse': 'no',
         'not good': 'no',
         'not well': 'no',
         'not yet': 'no',
