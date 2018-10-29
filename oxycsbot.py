@@ -495,7 +495,7 @@ class OxyCSBot(ChatBot):
             'liam walsh': '(202) 465-6304',
             'ethan glass': '(847) 644 - 2827',
             'conal dennison': '(626) 890 - 8844',
-            'matt labrie': '(925) 588 - 4049',
+            'matthew labrie': '(925) 588 - 4049',
             'david paine': '(310) 977 - 6205',
             'riley mccabe': '(781) 697 - 8005',
             'miles robertson': '(914) 486 - 1653',
@@ -508,7 +508,6 @@ class OxyCSBot(ChatBot):
             'karla lopez': '(124) 879 - 9932',
             'berkli maningo': '(230) 456 - 8799',
             'meredith cook': '(213) 354 - 0094',
-            'devoney amberg': '(923) 477 - 6575',
         }
 
         self.RESPONSES = {
