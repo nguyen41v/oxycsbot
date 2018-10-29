@@ -210,6 +210,8 @@ class OxyCSBot(ChatBot):
         'sad_life',
         'team_chemistry',
         'talk_to_team',
+        'advice',
+        'other_connections'
     ]
 
     TAGS = {
@@ -287,6 +289,8 @@ class OxyCSBot(ChatBot):
         'quit': ['leave', 'no'],
         'isn\'t': 'no',
         'doesn\'t: no'
+        'don\'t': 'no',
+        'dont': 'no',
         'wasnt': 'no',
         'isnt': 'no',
         'doesnt': 'no',
@@ -327,7 +331,7 @@ class OxyCSBot(ChatBot):
         'softball': 'softball',
         'volleyball': 'volleyball',
         'track and field': 'track and field',
-        'track': 'track and fie;d',
+        'track': 'track and field',
         'golf': 'golf',
         'golfing': 'golf',
         'swimming': 'swimming',
@@ -506,7 +510,6 @@ class OxyCSBot(ChatBot):
         self.RESPONSES = {
             'introductions': [
                 'Hello, I\'m Santi.\nI help college student athletes better transition to college sports at Oxy\n',
-                'Hello, I\'m Santi.\n',
             ],
             'greetings': [
                 'How has your transition been?',
@@ -610,12 +613,15 @@ class OxyCSBot(ChatBot):
                     'If things get worse, then try consulting with your family, friends, team, or perhaps Emmons.',
             ],
             'individual_sport': [
-                'That\'s a a great sport! '
-                '   Even thought it\'s an individual sport, I would recommend talking to some of the other athletes. '
+                'That\'s a a great sport!'
+                '   Even thought it\'s an individual sport, I would recommend talking to some of the other athletes.'
                 '   How does that sound?',
             ],
             'connections': [
                 'Great, I think you should focus on making some connections. We\'ll see how this plays out.'
+            ],
+            'other_connections': [
+                'I think you should focus on making some connections. We\'ll see how this plays out.',
             ],
             'advice': [
                 'Hmm . . . my advice would be to wait for one semester and see how things play out.'
@@ -972,22 +978,30 @@ class OxyCSBot(ChatBot):
             return self.go_to_state('yes_coach')
         if 'what_the' in tags:
             return self.what_the('bad_transition', 'yes_coach', 'no_coach')
-        else:
-            return self.go_to_state('yes_coach')
+        return self.go_to_state('yes_coach')
 
     def on_enter_individual_sport(self):
         return self.get_random_state_response('individual_sport')
 
     def respond_from_individual_sport(self, message, tags):
-        if 'no' in tags:
+        if 'leave' in tags:
             return self.go_to_state('advice')
-        elif 'yes' in tags:
+        if 'yes' in tags:
             return self.go_to_state('connections')
+        return self.go_to_state('other_connections')
 
     def on_enter_connections(self):
         return self.get_random_state_response('connections')
 
     def respond_from_connections(self, message, tags):
+        if 'thanks' in tags:
+            return self.finish('woo')
+        return self.finish('ask_user')
+
+    def on_enter_other_connections(self):
+        return self.get_random_state_response('other_connections')
+
+    def respond_from_other_connections(self, message, tags):
         if 'thanks' in tags:
             return self.finish('woo')
         return self.finish('ask_user')
