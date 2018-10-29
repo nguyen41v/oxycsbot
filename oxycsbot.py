@@ -1107,6 +1107,7 @@ class OxyCSBot(ChatBot):
         return self.get_random_state_response('coach')
 
     def finish_ask_user(self):
+        self.start += 1
         return self.get_random_state_response('ask_user')
 
 
